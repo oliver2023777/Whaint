@@ -11,6 +11,7 @@ services:
     container_name: whaint
     restart: unless-stopped
     ports:
-      - "${WHAINT_PORT:-3080}:80"
+      # 对外固定端口：服务器 IP:3080
+      - "3080:80"
     environment:
       - TZ=${TZ:-Asia/Shanghai}
