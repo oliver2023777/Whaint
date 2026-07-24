@@ -116,6 +116,17 @@
 
 本地：`bun install && bun run dev`；构建：`bun run build`。
 
+### 服务器（推荐）
+
+```bash
+git clone https://github.com/oliver2023777/Whaint.git
+cd Whaint
+cp .env.example .env   # 改 PUBLIC_SITE_URL / WHAINT_PORT
+./start.sh             # Docker 构建并启动
+```
+
+改域名后重新 `./start.sh`（会重建镜像，把新 env 打进静态页）。
+
 ---
 
 ## 6. 文献索引

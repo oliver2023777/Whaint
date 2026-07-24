@@ -1,0 +1,16 @@
+services:
+  whaint:
+    image: whaint:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-https://whalecore.example}
+        PUBLIC_APP_URL: ${PUBLIC_APP_URL:-https://whacore.cn}
+        PUBLIC_CONTACT_EMAIL: ${PUBLIC_CONTACT_EMAIL:-hello@whalecore.example}
+    container_name: whaint
+    restart: unless-stopped
+    ports:
+      - "${WHAINT_PORT:-80}:80"
+    environment:
+      - TZ=${TZ:-Asia/Shanghai}

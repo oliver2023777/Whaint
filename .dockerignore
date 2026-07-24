@@ -1,0 +1,14 @@
+.git
+.astro
+dist
+node_modules
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.vscode
+.idea
+README.md
+AGENTS.md
+content
