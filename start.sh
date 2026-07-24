@@ -76,10 +76,32 @@ set -a
 source .env
 set +a
 
-PORT="${WHAINT_PORT:-80}"
+PORT="${WHAINT_PORT:-3080}"
+
+# 若宿主机 80 已被占用，compose 可能起失败；默认走 3080
+warn_if_port_busy() {
+  if command -v ss >/dev/null 2>&1; then
+    if ss -lnt | awk '{print $4}' | grep -qE "[:.]${PORT}\$"; then
+      warn "端口 ${PORT} 似乎已被占用。可改 .env 里的 WHAINT_PORT 后再启动。"
+    fi
+  fi
+}
+
+show_access() {
+  local mapped
+  mapped="$(docker port whaint 80 2>/dev/null || true)"
+  if [[ -z "$mapped" ]]; then
+    err "容器已起，但没有端口映射！请执行：docker logs whaint"
+    err "或改 .env 的 WHAINT_PORT 后：./start.sh stop && ./start.sh"
+    return 1
+  fi
+  ok "营销站已启动 → http://服务器IP:${PORT}/"
+  info "端口映射：${mapped} · 日志：./start.sh logs · 停止：./start.sh stop"
+}
 
 case "$cmd" in
   up|start|"")
+    warn_if_port_busy
     if [[ "$cmd" == "start" && "$FORCE_BUILD" -eq 0 ]]; then
       info "启动容器（不重建）…"
       "${COMPOSE[@]}" up -d
@@ -87,8 +109,8 @@ case "$cmd" in
       info "构建并启动…"
       "${COMPOSE[@]}" up -d --build
     fi
-    ok "营销站已启动 → http://服务器IP:${PORT}/  （或你的域名）"
-    info "日志：./start.sh logs · 停止：./start.sh stop"
+    sleep 1
+    show_access
     ;;
   stop)
     "${COMPOSE[@]}" down
@@ -97,12 +119,14 @@ case "$cmd" in
   restart)
     "${COMPOSE[@]}" restart
     ok "已重启"
+    show_access
     ;;
   logs)
     "${COMPOSE[@]}" logs -f --tail=200
     ;;
   status|ps)
     "${COMPOSE[@]}" ps
+    docker port whaint 80 2>/dev/null || true
     ;;
   help|-h|--help)
     usage
