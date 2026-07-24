@@ -7,7 +7,8 @@
 #   ./start.sh start --build   # 强制重建并启动
 #   ./start.sh stop|restart|logs|status|help
 #
-# 首次：cp .env.example .env  → 改 PUBLIC_SITE_URL 等 → ./start.sh
+# 首次：直接 ./start.sh（无 .env 时会从 .env.example 自动生成）
+# 改域名：编辑 .env 里的 PUBLIC_SITE_URL → ./start.sh start --build
 # ═══════════════════════════════════════════════════════════════
 
 set -euo pipefail
@@ -38,15 +39,16 @@ detect_compose() {
 }
 
 ensure_env() {
-  if [[ ! -f .env ]]; then
-    if [[ -f .env.example ]]; then
-      cp .env.example .env
-      warn "已从 .env.example 生成 .env，请按需修改 PUBLIC_SITE_URL 等后重建。"
-    else
-      err "缺少 .env / .env.example"
-      exit 1
-    fi
+  if [[ -f .env ]]; then
+    return 0
   fi
+  if [[ ! -f .env.example ]]; then
+    err "缺少 .env.example，无法自动创建 .env"
+    exit 1
+  fi
+  cp .env.example .env
+  ok "未找到 .env，已自动从 .env.example 创建"
+  warn "默认域名是占位符；上线前请改 .env 里的 PUBLIC_SITE_URL，再执行：./start.sh start --build"
 }
 
 usage() {
