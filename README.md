@@ -121,11 +121,10 @@
 ```bash
 git clone https://github.com/oliver2023777/Whaint.git
 cd Whaint
-cp .env.example .env   # 改 PUBLIC_SITE_URL / WHAINT_PORT
-./start.sh             # Docker 构建并启动
+./start.sh             # 无 .env 时自动从 .env.example 生成
 ```
 
-改域名后重新 `./start.sh`（会重建镜像，把新 env 打进静态页）。
+改域名：编辑 `.env` 的 `PUBLIC_SITE_URL` 后执行 `./start.sh start --build`。
 
 ---
 
