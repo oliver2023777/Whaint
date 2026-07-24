@@ -1,0 +1,38 @@
+---
+import CtaLink from './CtaLink.astro';
+import { getLocale, getMessages } from '../i18n';
+
+interface Props {
+  title?: string;
+  highlight?: string;
+  suffix?: string;
+  sub?: string;
+}
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+
+const {
+  title = t.ctaBand.title,
+  highlight = t.ctaBand.highlight,
+  suffix = t.ctaBand.suffix,
+  sub = t.ctaBand.sub,
+} = Astro.props;
+---
+
+<section class="bottom-cta" aria-label="页面转化">
+  <div class="wrap bottom-cta__inner">
+    <h2>
+      {title}
+      {' '}
+      <span class="text-glow">{highlight}</span>
+      {' '}
+      {suffix}
+    </h2>
+    <p class="bottom-cta__sub">{sub}</p>
+    <div class="cta-row bottom-cta__actions">
+      <CtaLink label={t.common.getDemo} variant="primary" />
+      <CtaLink label={t.common.consultPrice} variant="outline" href="/contact" />
+    </div>
+  </div>
+</section>

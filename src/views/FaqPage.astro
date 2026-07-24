@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageCtaBand from '../components/PageCtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import { getLocale, getMessages, localizePath } from '../i18n';
+import { faqPageJsonLd } from '../lib/jsonld';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const f = t.faq;
+---
+
+<BaseLayout
+  title={f.title}
+  description={f.description}
+  path="/faq"
+  jsonLd={faqPageJsonLd(f.items)}
+>
+  <PageHero kicker={f.kicker} title={f.title} lede={f.lede} />
+
+  <section class="section section-split">
+    <div class="wrap">
+      <div class="faq-accordion">
+        {
+          f.items.map((item) => (
+            <details class="faq-item">
+              <summary class="faq-item__q">
+                <span class="faq-item__title">{item.question}</span>
+                <span class="faq-item__icon" aria-hidden="true"></span>
+              </summary>
+              <div class="faq-item__a">
+                <p>{item.answer}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+      <p class="inner-links">
+        {f.relatedLinks.prefix}
+        <a href={localizePath('/product', locale)}>{f.relatedLinks.product}</a>
+        ·
+        <a href={localizePath('/contact', locale)}>{f.relatedLinks.contact}</a>
+        ·
+        <a href={localizePath('/compliance', locale)}>{f.relatedLinks.compliance}</a>
+      </p>
+    </div>
+  </section>
+
+  <PageCtaBand />
+</BaseLayout>
+
+<style>
+  .faq-accordion {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  @media (min-width: 800px) {
+    .faq-accordion {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+  }
+
+  .faq-item {
+    margin: 0;
+    border: 1px solid rgba(39, 39, 42, 0.95);
+    border-radius: 0.85rem;
+    background: rgba(24, 24, 27, 0.45);
+    transition:
+      border-color 180ms ease,
+      box-shadow 180ms ease;
+  }
+
+  .faq-item:hover {
+    border-color: rgba(234, 179, 8, 0.35);
+  }
+
+  .faq-item[open] {
+    border-color: rgba(234, 179, 8, 0.4);
+    box-shadow: 0 0 18px rgba(234, 179, 8, 0.08);
+  }
+
+  .faq-item__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    padding: 1.05rem 1.15rem;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+
+  .faq-item__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-item__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.02em;
+    color: #f4f4f5;
+  }
+
+  .faq-item__icon {
+    position: relative;
+    flex: 0 0 1.35rem;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 999px;
+    border: 1px solid rgba(234, 179, 8, 0.35);
+    background: rgba(234, 179, 8, 0.08);
+  }
+
+  .faq-item__icon::before,
+  .faq-item__icon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: #eab308;
+    border-radius: 1px;
+    transition: transform 180ms ease, opacity 180ms ease;
+  }
+
+  /* + horizontal */
+  .faq-item__icon::before {
+    width: 0.55rem;
+    height: 1.5px;
+    transform: translate(-50%, -50%);
+  }
+
+  /* + vertical */
+  .faq-item__icon::after {
+    width: 1.5px;
+    height: 0.55rem;
+    transform: translate(-50%, -50%);
+  }
+
+  .faq-item[open] .faq-item__icon::after {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleY(0);
+  }
+
+  .faq-item__a {
+    padding: 0 1.15rem 1.15rem;
+  }
+
+  .faq-item__a p {
+    margin: 0;
+    padding-top: 0.15rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 0.85rem;
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: #a1a1aa;
+  }
+</style>

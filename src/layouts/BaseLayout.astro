@@ -1,0 +1,124 @@
+---
+import '../styles/global.css';
+import JsonLd from '../components/JsonLd.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { getLocale, getMessages, localizePath, stripLocale } from '../i18n';
+import {
+  organizationJsonLd,
+  softwareApplicationJsonLd,
+} from '../lib/jsonld';
+import { absoluteUrl, fullTitle, type PageSeo } from '../lib/seo';
+import { site } from '../lib/site';
+
+interface Props extends PageSeo {
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  includeDefaultJsonLd?: boolean;
+}
+
+const {
+  title,
+  description,
+  path,
+  ogType = 'website',
+  jsonLd,
+  includeDefaultJsonLd = true,
+} = Astro.props;
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const barePath = stripLocale(path);
+const localizedPath = localizePath(barePath, locale);
+const altZh = localizePath(barePath, 'zh');
+const altEn = localizePath(barePath, 'en');
+
+const pageTitle = fullTitle(title);
+const canonical = absoluteUrl(localizedPath);
+const defaultLd = includeDefaultJsonLd
+  ? [organizationJsonLd(locale), softwareApplicationJsonLd(locale)]
+  : [];
+const extraLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const allLd = [...defaultLd, ...extraLd];
+---
+
+<!doctype html>
+<html lang={t.meta.htmlLang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      (function () {
+        try {
+          var ua = navigator.userAgent || '';
+          if (/bot|crawl|spider|slurp|bingpreview|facebookexternalhit/i.test(ua)) return;
+
+          var KEY = 'whaint-locale';
+          if (localStorage.getItem(KEY)) return;
+
+          var path = location.pathname || '/';
+          var onEn = path === '/en' || path.indexOf('/en/') === 0;
+          function toEn(p) {
+            if (p === '/' || p === '') return '/en';
+            if (p === '/en' || p.indexOf('/en/') === 0) return p;
+            return '/en' + p;
+          }
+          function toZh(p) {
+            if (p === '/en') return '/';
+            if (p.indexOf('/en/') === 0) return p.slice(3) || '/';
+            return p;
+          }
+
+          var primary = String(
+            (navigator.languages && navigator.languages[0]) || navigator.language || 'zh',
+          ).toLowerCase();
+          var preferred =
+            primary.indexOf('zh') === 0 ? 'zh' : primary.indexOf('en') === 0 ? 'en' : 'zh';
+          localStorage.setItem(KEY, preferred);
+
+          if (preferred === 'en' && !onEn) {
+            location.replace(toEn(path) + location.search + location.hash);
+          } else if (preferred === 'zh' && onEn) {
+            location.replace(toZh(path) + location.search + location.hash);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="zh-CN" href={absoluteUrl(altZh)} />
+    <link rel="alternate" hreflang="en" href={absoluteUrl(altEn)} />
+    <link rel="alternate" hreflang="x-default" href={absoluteUrl(altZh)} />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:locale" content={t.meta.ogLocale} />
+    <meta
+      property="og:locale:alternate"
+      content={locale === 'zh' ? 'en_US' : 'zh_CN'}
+    />
+    <meta property="og:site_name" content={site.displayName} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" href="/icons/whalecore.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    {allLd.length > 0 && <JsonLd data={allLd} />}
+  </head>
+  <body>
+    <div class="site-shell">
+      <SiteHeader />
+      <main class="site-main">
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

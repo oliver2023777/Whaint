@@ -1,0 +1,494 @@
+---
+import PageCtaBand from '../components/PageCtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLocale, getMessages, localizePath } from '../i18n';
+
+/**
+ * 公开合规摘要：口径对齐本仓 compliance/
+ * Tab 切换，锚点：#positioning #risk #prohibited #disclaimer #notice #privacy #refund #sales
+ */
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const c = t.compliance;
+
+const navItems = [
+  { id: 'positioning', label: c.tabs.positioning },
+  { id: 'risk', label: c.tabs.risk },
+  { id: 'prohibited', label: c.tabs.prohibited },
+  { id: 'disclaimer', label: c.tabs.disclaimer },
+  { id: 'notice', label: c.tabs.notice },
+  { id: 'privacy', label: c.tabs.privacy },
+  { id: 'refund', label: c.tabs.refund },
+  { id: 'sales', label: c.tabs.sales },
+] as const;
+---
+
+<BaseLayout title={c.title} description={c.description} path="/compliance">
+  <PageHero kicker={c.kicker} title={c.pageTitle} lede={c.lede} />
+
+  <section class="section section-split compliance-page">
+    <div class="wrap compliance-page__wrap" data-compliance-tabs>
+      <div class="compliance-toolbar">
+        <nav class="compliance-nav" role="tablist" aria-label={c.tabsAria}>
+          {
+            navItems.map((item, i) => (
+              <button
+                type="button"
+                class="compliance-nav__btn"
+                role="tab"
+                id={`tab-${item.id}`}
+                aria-controls={`panel-${item.id}`}
+                aria-selected={i === 0 ? 'true' : 'false'}
+                tabindex={i === 0 ? 0 : -1}
+                data-tab={item.id}
+              >
+                {item.label}
+              </button>
+            ))
+          }
+        </nav>
+        <p class="compliance-source">{c.sourceNote}</p>
+      </div>
+
+      <div class="compliance-panels">
+        <article
+          id="panel-positioning"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-positioning"
+          data-panel="positioning"
+        >
+          <h2>{c.positioning.heading}</h2>
+          <p class="compliance-callout">{c.positioning.callout}</p>
+
+          <h3>{c.positioning.whatHeading}</h3>
+          <ul class="compliance-list">
+            {c.positioning.what.map((item) => <li>{item}</li>)}
+          </ul>
+
+          <h3>{c.positioning.notHeading}</h3>
+          <ul class="compliance-list compliance-list--cross">
+            {c.positioning.not.map((item) => <li>{item}</li>)}
+          </ul>
+
+          <h3>{c.positioning.fundsHeading}</h3>
+          <ul class="compliance-list">
+            {c.positioning.funds.map((item) => <li>{item}</li>)}
+          </ul>
+
+          <p class="compliance-note">{c.positioning.note}</p>
+        </article>
+
+        <article
+          id="panel-risk"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-risk"
+          data-panel="risk"
+          hidden
+        >
+          <h2>{c.risk.heading}</h2>
+          <h3>{c.risk.tradeHeading}</h3>
+          <ul class="compliance-list">
+            {c.risk.trade.map((item) => <li>{item}</li>)}
+          </ul>
+          <h3>{c.risk.aiHeading}</h3>
+          <ul class="compliance-list">
+            {c.risk.ai.map((item) => <li>{item}</li>)}
+          </ul>
+          <h3>{c.risk.opsHeading}</h3>
+          <ul class="compliance-list">
+            {c.risk.ops.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+
+        <article
+          id="panel-prohibited"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-prohibited"
+          data-panel="prohibited"
+          hidden
+        >
+          <h2>{c.prohibited.heading}</h2>
+          <p class="compliance-lede">{c.prohibited.lede}</p>
+          <ul class="compliance-list compliance-list--cross">
+            {c.prohibited.items.map((item) => <li>{item}</li>)}
+          </ul>
+          <h3>{c.prohibited.authHeading}</h3>
+          <ul class="compliance-list">
+            {c.prohibited.auth.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+
+        <article
+          id="panel-disclaimer"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-disclaimer"
+          data-panel="disclaimer"
+          hidden
+        >
+          <h2>{c.disclaimer.heading}</h2>
+          <ol class="compliance-list compliance-list--ordered">
+            {c.disclaimer.items.map((item) => <li>{item}</li>)}
+          </ol>
+          <p class="compliance-callout compliance-callout--accent">{c.disclaimer.callout}</p>
+        </article>
+
+        <article
+          id="panel-notice"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-notice"
+          data-panel="notice"
+          hidden
+        >
+          <h2>{c.notice.heading}</h2>
+          <p class="compliance-lede">{c.notice.lede}</p>
+          <h3>{c.notice.knowHeading}</h3>
+          <ul class="compliance-list">
+            {c.notice.know.map((item) => <li>{item}</li>)}
+          </ul>
+          <h3>{c.notice.notExpectHeading}</h3>
+          <ul class="compliance-list compliance-list--cross">
+            {c.notice.notExpect.map((item) => <li>{item}</li>)}
+          </ul>
+          <p class="compliance-note">{c.notice.note}</p>
+        </article>
+
+        <article
+          id="panel-privacy"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-privacy"
+          data-panel="privacy"
+          hidden
+        >
+          <h2>{c.privacy.heading}</h2>
+          <ul class="compliance-list">
+            {c.privacy.items.map((item) => <li>{item}</li>)}
+          </ul>
+          <p class="compliance-note">{c.privacy.note}</p>
+        </article>
+
+        <article
+          id="panel-refund"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-refund"
+          data-panel="refund"
+          hidden
+        >
+          <h2>{c.refund.heading}</h2>
+          <p class="compliance-lede">{c.refund.lede}</p>
+          <h3>{c.refund.okHeading}</h3>
+          <ul class="compliance-list">
+            {c.refund.ok.map((item) => <li>{item}</li>)}
+          </ul>
+          <h3>{c.refund.noHeading}</h3>
+          <ul class="compliance-list compliance-list--cross">
+            {c.refund.no.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+
+        <article
+          id="panel-sales"
+          class="compliance-block"
+          role="tabpanel"
+          aria-labelledby="tab-sales"
+          data-panel="sales"
+          hidden
+        >
+          <h2>{c.sales.heading}</h2>
+          <ul class="compliance-list">
+            {c.sales.items.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+      </div>
+
+      <p class="inner-links">
+        {c.relatedLinks.prefix}
+        <a href={localizePath('/faq', locale)}>{c.relatedLinks.faq}</a>
+        ·
+        <a href={localizePath('/product', locale)}>{c.relatedLinks.product}</a>
+        ·
+        <a href={localizePath('/contact', locale)}>{c.relatedLinks.contact}</a>
+      </p>
+    </div>
+  </section>
+
+  <PageCtaBand sub={c.ctaSub} />
+</BaseLayout>
+
+<style is:global>
+  .compliance-toolbar {
+    margin: 0 0 1rem;
+  }
+
+  .compliance-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin: 0 0 0.65rem;
+  }
+
+  .compliance-nav__btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 0.45rem;
+    border: 1px solid var(--color-line-strong);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: 0.8125rem;
+    font-weight: 550;
+    cursor: pointer;
+    transition:
+      color 160ms var(--ease-out),
+      border-color 160ms var(--ease-out),
+      background-color 160ms var(--ease-out);
+  }
+
+  .compliance-nav__btn:hover {
+    color: var(--color-brand);
+    border-color: var(--color-brand-border);
+  }
+
+  .compliance-nav__btn[aria-selected="true"] {
+    color: var(--color-on-brand);
+    border-color: rgba(240, 185, 11, 0.55);
+    background: var(--color-brand);
+  }
+
+  .compliance-source {
+    margin: 0;
+    color: #71717a;
+    font-size: 0.75rem;
+    line-height: 1.5;
+  }
+
+  .compliance-source code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    color: var(--color-brand);
+  }
+
+  .compliance-panels {
+    min-height: 18rem;
+  }
+
+  .compliance-block {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    margin: 0;
+    padding: 1.5rem;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+  }
+
+  .compliance-block::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(234, 179, 8, 0.2), transparent);
+    pointer-events: none;
+  }
+
+  .compliance-block[hidden] {
+    display: none;
+  }
+
+  .compliance-block h2 {
+    margin: 0 0 1rem;
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--color-brand);
+    font-size: clamp(1.2rem, 2.4vw, 1.45rem);
+    line-height: 1.25;
+  }
+
+  .compliance-block h3 {
+    margin: 1.35rem 0 0.65rem;
+    font-size: 0.95rem;
+    font-weight: 650;
+    color: var(--color-brand);
+    letter-spacing: -0.01em;
+  }
+
+  .compliance-lede {
+    margin: 0 0 1rem;
+    color: #a1a1aa;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .compliance-callout {
+    margin: 0 0 1.25rem;
+    padding: 1rem 1.1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-line-strong);
+    background: rgba(5, 6, 8, 0.45);
+    color: var(--color-ink);
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .compliance-callout strong {
+    color: var(--color-brand);
+    font-weight: 650;
+  }
+
+  .compliance-callout--accent {
+    margin-top: 1.15rem;
+    margin-bottom: 0;
+    border-color: rgba(240, 185, 11, 0.28);
+    background: rgba(240, 185, 11, 0.06);
+  }
+
+  .compliance-callout code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--color-brand);
+  }
+
+  .compliance-note {
+    margin: 1.15rem 0 0;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .compliance-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.625rem;
+  }
+
+  .compliance-list > li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    position: relative;
+    padding-left: 0;
+    color: #a1a1aa;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .compliance-list > li::before {
+    content: '';
+    flex: 0 0 1rem;
+    width: 1rem;
+    height: 1rem;
+    margin-top: 0.15rem;
+    background-image: var(--icon-check);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  .compliance-list--cross > li::before {
+    content: "";
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f87171'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18L18 6M6 6l12 12'/%3E%3C/svg%3E");
+    color: transparent;
+    font-size: 0;
+    top: auto;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .compliance-list--ordered {
+    list-style: none;
+    counter-reset: compliance-ol;
+  }
+
+  .compliance-list--ordered > li {
+    counter-increment: compliance-ol;
+    padding-left: 0;
+  }
+
+  .compliance-list--ordered > li::before {
+    content: counter(compliance-ol) ".";
+    flex: 0 0 1.35rem;
+    width: auto;
+    height: auto;
+    margin-top: 0.05rem;
+    border-radius: 0;
+    background: transparent;
+    background-image: none;
+    color: var(--color-brand);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+
+  .compliance-page .inner-links {
+    margin: 1.25rem 0 0;
+    font-size: 0.875rem;
+    color: #71717a;
+  }
+</style>
+
+<script>
+  const root = document.querySelector('[data-compliance-tabs]');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll('[data-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-panel]'));
+    const ids = tabs.map((t) => t.getAttribute('data-tab')).filter(Boolean);
+
+    function activate(id, pushHash = true) {
+      const next = ids.includes(id) ? id : 'positioning';
+      for (const tab of tabs) {
+        const on = tab.getAttribute('data-tab') === next;
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+      }
+      for (const panel of panels) {
+        panel.hidden = panel.getAttribute('data-panel') !== next;
+      }
+      if (pushHash) {
+        const url = new URL(window.location.href);
+        url.hash = next;
+        history.replaceState(null, '', url);
+      }
+    }
+
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => activate(tab.getAttribute('data-tab') || 'positioning'));
+    }
+
+    const nav = root.querySelector('.compliance-nav');
+    nav?.addEventListener('keydown', (e) => {
+      const current = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+      if (current < 0) return;
+      let next = current;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (current + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
+        next = (current - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = tabs.length - 1;
+      else return;
+      e.preventDefault();
+      tabs[next]?.focus();
+      activate(tabs[next].getAttribute('data-tab') || 'positioning');
+    });
+
+    const fromHash = () => {
+      const id = window.location.hash.replace(/^#/, '');
+      activate(id || 'positioning', false);
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  }
+</script>

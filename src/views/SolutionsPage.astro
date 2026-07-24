@@ -1,0 +1,184 @@
+---
+import Icon from '../components/Icon.astro';
+import PageCtaBand from '../components/PageCtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLocale, getMessages } from '../i18n';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const s = t.solutions;
+---
+
+<BaseLayout title={s.title} description={s.description} path="/solutions">
+  <PageHero kicker={s.kicker} title={s.pageTitle} lede={s.lede} />
+
+  <section class="section section-split">
+    <div class="wrap" data-mode-tabs>
+      <div class="mode-pills" role="tablist" aria-label={s.tabsAria}>
+        {
+          s.modes.map((mode, i) => (
+            <button
+              type="button"
+              class:list={['mode-pill', i === 0 && 'mode-pill--on']}
+              role="tab"
+              id={`tab-${mode.id}`}
+              aria-controls={`panel-${mode.id}`}
+              aria-selected={i === 0 ? 'true' : 'false'}
+              tabindex={i === 0 ? 0 : -1}
+              data-mode-tab={mode.id}
+            >
+              <Icon name={mode.icon} size={14} />
+              {mode.label}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        s.modes.map((mode, i) => (
+          <div
+            id={`panel-${mode.id}`}
+            class="mode-panel"
+            role="tabpanel"
+            aria-labelledby={`tab-${mode.id}`}
+            data-mode-panel={mode.id}
+            hidden={i !== 0}
+          >
+            <div class="mode-panel__intro">
+              <h2>{mode.title}</h2>
+              <p>{mode.lede}</p>
+            </div>
+            <div class="info-grid info-grid--3">
+              {mode.cards.map((card) => (
+                <article class="info-card">
+                  <span class="feature-icon" aria-hidden="true">
+                    <Icon name={card.icon} size={20} />
+                  </span>
+                  <h3 class="info-card__title">{card.title}</h3>
+                  <p class="info-card__lede">{card.lede}</p>
+                  <ul class="info-list">
+                    {card.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <div data-mode-cta>
+    {
+      s.modes.map((mode, i) => (
+        <div data-mode-cta-panel={mode.id} hidden={i !== 0}>
+          <PageCtaBand
+            title={mode.ctaTitle}
+            highlight={mode.ctaHighlight}
+            suffix={mode.ctaSuffix}
+            sub={mode.ctaSub}
+          />
+        </div>
+      ))
+    }
+  </div>
+</BaseLayout>
+
+<style is:global>
+  .mode-panel {
+    margin-top: 1.5rem;
+  }
+
+  .mode-panel[hidden] {
+    display: none;
+  }
+
+  .mode-panel__intro {
+    margin: 0 0 1.35rem;
+    max-width: 40rem;
+  }
+
+  .mode-panel__intro h2 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.25rem, 2.4vw, 1.5rem);
+  }
+
+  .mode-panel__intro p {
+    margin: 0;
+    color: #a1a1aa;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .mode-pills button.mode-pill {
+    cursor: pointer;
+    font: inherit;
+  }
+
+  [data-mode-cta-panel][hidden] {
+    display: none;
+  }
+</style>
+
+<script>
+  const root = document.querySelector('[data-mode-tabs]');
+  const ctaRoot = document.querySelector('[data-mode-cta]');
+  if (root) {
+    const tabs = Array.from(root.querySelectorAll('[data-mode-tab]'));
+    const panels = Array.from(root.querySelectorAll('[data-mode-panel]'));
+    const ctaPanels = ctaRoot
+      ? Array.from(ctaRoot.querySelectorAll('[data-mode-cta-panel]'))
+      : [];
+    const ids = tabs.map((t) => t.getAttribute('data-mode-tab')).filter(Boolean);
+
+    function activate(id, pushHash = true) {
+      const next = ids.includes(id) ? id : 'managed';
+      for (const tab of tabs) {
+        const on = tab.getAttribute('data-mode-tab') === next;
+        tab.setAttribute('aria-selected', on ? 'true' : 'false');
+        tab.tabIndex = on ? 0 : -1;
+        tab.classList.toggle('mode-pill--on', on);
+      }
+      for (const panel of panels) {
+        panel.hidden = panel.getAttribute('data-mode-panel') !== next;
+      }
+      for (const panel of ctaPanels) {
+        panel.hidden = panel.getAttribute('data-mode-cta-panel') !== next;
+      }
+      if (pushHash) {
+        const url = new URL(window.location.href);
+        url.hash = next;
+        history.replaceState(null, '', url);
+      }
+    }
+
+    for (const tab of tabs) {
+      tab.addEventListener('click', () => activate(tab.getAttribute('data-mode-tab') || 'managed'));
+    }
+
+    root.querySelector('.mode-pills')?.addEventListener('keydown', (e) => {
+      const current = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+      if (current < 0) return;
+      let next = current;
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (current + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
+        next = (current - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') next = 0;
+      else if (e.key === 'End') next = tabs.length - 1;
+      else return;
+      e.preventDefault();
+      tabs[next]?.focus();
+      activate(tabs[next].getAttribute('data-mode-tab') || 'managed');
+    });
+
+    const fromHash = () => {
+      const id = window.location.hash.replace(/^#/, '');
+      activate(id || 'managed', false);
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  }
+</script>

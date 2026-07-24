@@ -1,0 +1,316 @@
+---
+import Icon from './Icon.astro';
+import { getLocale, getMessages } from '../i18n';
+import { contacts } from '../lib/site';
+
+interface Props {
+  /** compact：一行；card：联系 / 定价页 */
+  variant?: 'compact' | 'card';
+}
+
+const { variant = 'card' } = Astro.props;
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+
+const channels = [
+  {
+    icon: 'chat' as const,
+    emoji: '💬',
+    label: 'QQ',
+    value: contacts.qq,
+    href: `tencent://message/?uin=${contacts.qq}`,
+    action: t.channels.qqAction,
+    tone: 'qq',
+  },
+  {
+    icon: 'plane' as const,
+    emoji: '✈️',
+    label: 'Telegram',
+    value: contacts.telegram,
+    href: contacts.telegramUrl,
+    action: t.channels.tgAction,
+    external: true,
+    tone: 'tg',
+  },
+  {
+    icon: 'globe' as const,
+    emoji: '🌐',
+    label: t.channels.demoLabel,
+    value: contacts.demoHost,
+    href: contacts.demoUrl,
+    action: t.channels.demoAction,
+    external: true,
+    tone: 'demo',
+  },
+] as const;
+---
+
+{
+  variant === 'compact' ? (
+    <ul class="contact-channels contact-channels--compact">
+      {channels.map((c) => (
+        <li>
+          <a
+            class="contact-link"
+            href={c.href}
+            rel={'external' in c && c.external ? 'noopener noreferrer' : undefined}
+            target={'external' in c && c.external ? '_blank' : undefined}
+          >
+            <span class="contact-ico" aria-hidden="true">
+              <Icon name={c.icon} size={14} />
+            </span>
+            <span class="k">{c.label}</span>
+            <span class="val">{c.value}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <ul class="contact-channels contact-channels--card">
+      {channels.map((c) => (
+        <li>
+          <a
+            class={`contact-card contact-card--${c.tone}`}
+            href={c.href}
+            rel={'external' in c && c.external ? 'noopener noreferrer' : undefined}
+            target={'external' in c && c.external ? '_blank' : undefined}
+          >
+            <span class="contact-card__top">
+              <span class="contact-card__badge" aria-hidden="true">{c.emoji}</span>
+              <span class="contact-card__label">{c.label}</span>
+            </span>
+            <span class="contact-card__value">{c.value}</span>
+            <span class="contact-card__action">
+              {c.action}
+              <span aria-hidden="true">→</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style is:global>
+  .contact-channels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .contact-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    flex: 0 0 1rem;
+    color: var(--color-brand);
+    line-height: 0;
+  }
+
+  .contact-ico svg {
+    display: block;
+    width: 14px;
+    height: 14px;
+  }
+
+  .contact-channels--compact {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 1.35rem;
+    font-size: 0.88rem;
+  }
+
+  .contact-channels--compact li {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .contact-channels--compact .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--color-ink-soft);
+    line-height: 1;
+  }
+
+  .contact-channels--compact .contact-link:hover {
+    color: var(--color-brand);
+  }
+
+  .contact-channels--compact .k {
+    color: var(--color-muted);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+  }
+
+  .contact-channels--compact .val {
+    color: inherit;
+  }
+
+  .contact-channels--card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    margin-top: 1.35rem;
+  }
+
+  @media (min-width: 720px) {
+    .contact-channels--card {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.05rem;
+    }
+  }
+
+  .contact-channels--card > li {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-width: 0;
+  }
+
+  .contact-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    height: 100%;
+    min-height: 9.25rem;
+    padding: 1.5rem;
+    overflow: hidden;
+    isolation: isolate;
+    border: 1px solid var(--card-border, rgba(39, 39, 42, 0.8));
+    border-radius: var(--radius, 1rem);
+    background: var(--card-bg, linear-gradient(180deg, rgba(24, 24, 27, 0.9), rgba(9, 9, 11, 0.8)));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition:
+      border-color 300ms var(--ease-out),
+      box-shadow 300ms var(--ease-out),
+      transform 300ms var(--ease-out),
+      background-color 300ms var(--ease-out);
+  }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(234, 179, 8, 0.2), transparent);
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .contact-card:hover {
+    border-color: rgba(234, 179, 8, 0.3);
+    box-shadow: 0 0 25px rgba(234, 179, 8, 0.08);
+    transform: translateY(-3px);
+    background:
+      linear-gradient(165deg, rgba(240, 185, 11, 0.08), transparent 48%),
+      linear-gradient(180deg, rgba(24, 24, 27, 0.95), rgba(9, 9, 11, 0.9));
+  }
+
+  .contact-card:hover::before {
+    opacity: 1;
+  }
+
+  .contact-card__top {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+  }
+
+  .contact-card__badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(234, 179, 8, 0.2);
+    background: rgba(234, 179, 8, 0.1);
+    font-size: 1rem;
+    line-height: 1;
+    transition: transform 300ms var(--ease-out);
+  }
+
+  .contact-card:hover .contact-card__badge {
+    transform: scale(1.05);
+  }
+
+  .contact-card--tg .contact-card__badge {
+    border-color: rgba(56, 189, 248, 0.3);
+    background: rgba(56, 189, 248, 0.1);
+  }
+
+  .contact-card--demo .contact-card__badge {
+    border-color: rgba(52, 211, 153, 0.3);
+    background: rgba(52, 211, 153, 0.1);
+  }
+
+  .contact-card__label {
+    font-size: 0.8125rem;
+    font-weight: 550;
+    letter-spacing: 0.01em;
+    color: #a1a1aa;
+  }
+
+  .contact-card__value {
+    display: block;
+    margin: 0.9rem 0 0;
+    font-family: var(--font-mono);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    line-height: 1.25;
+    color: #f4f4f5;
+    word-break: break-all;
+  }
+
+  .contact-card--demo .contact-card__value {
+    color: #f0b90b;
+  }
+
+  .contact-card__action {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: auto;
+    padding: 0.45rem 0.7rem;
+    border-radius: 0.4rem;
+    border: 1px solid rgba(240, 185, 11, 0.28);
+    background: rgba(240, 185, 11, 0.08);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #f0b90b;
+    transition:
+      background-color 160ms var(--ease-out),
+      border-color 160ms var(--ease-out),
+      color 160ms var(--ease-out);
+  }
+
+  .contact-card:hover .contact-card__action {
+    border-color: rgba(240, 185, 11, 0.5);
+    background: rgba(240, 185, 11, 0.16);
+    color: #fcd535;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-card:hover {
+      transform: none;
+    }
+  }
+</style>

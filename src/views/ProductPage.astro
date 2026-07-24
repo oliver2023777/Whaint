@@ -1,0 +1,85 @@
+---
+import Icon from '../components/Icon.astro';
+import PageCtaBand from '../components/PageCtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLocale, getMessages, localizePath } from '../i18n';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const p = t.product;
+---
+
+<BaseLayout title={p.title} description={p.description} path="/product">
+  <PageHero kicker={p.kicker} title={p.pageTitle} lede={p.lede} />
+
+  <section class="section section-split">
+    <div class="wrap">
+      <ul class="trust-grid">
+        {
+          p.highlights.map((item) => (
+            <li>
+              <span class="feature-icon" aria-hidden="true">
+                <Icon name={item.icon} size={22} />
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-split">
+    <div class="wrap">
+      <p class="section-kicker">{p.capabilities.kicker}</p>
+      <h2>{p.capabilities.heading}</h2>
+      <div class="info-grid info-grid--3" style="margin-top: 1.5rem">
+        {
+          p.capabilities.cards.map((card) => (
+            <article class="info-card">
+              <span class="feature-icon" aria-hidden="true">
+                <Icon name={card.icon} size={20} />
+              </span>
+              <h3 class="info-card__title">{card.title}</h3>
+              <ul class="info-list">
+                {card.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-split">
+    <div class="wrap">
+      <p class="section-kicker">{p.monetize.kicker}</p>
+      <h2>{p.monetize.heading}</h2>
+      <ul class="trust-grid trust-grid--3" style="margin-top: 1.5rem">
+        {
+          p.monetize.cards.map((card) => (
+            <li>
+              <span class="feature-icon" aria-hidden="true">
+                <Icon name={card.icon} size={22} />
+              </span>
+              <h3>{card.title}</h3>
+              <p>{card.desc}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <p class="inner-links">
+        {p.monetize.innerLinks.prefix}
+        <a href={localizePath('/solutions', locale)}>{p.monetize.innerLinks.solutions}</a>
+        ·
+        <a href={localizePath('/contact', locale)}>{p.monetize.innerLinks.contact}</a>
+      </p>
+    </div>
+  </section>
+
+  <PageCtaBand />
+</BaseLayout>

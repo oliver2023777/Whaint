@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://whalecore.example/sitemap-index.xml

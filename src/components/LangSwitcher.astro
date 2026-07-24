@@ -1,0 +1,79 @@
+---
+import { getLocale, localeLabels, locales, switchLocalePath, type Locale } from '../i18n';
+
+const locale = getLocale(Astro.currentLocale);
+const pathname = Astro.url.pathname;
+---
+
+<div class="lang-switcher" role="group" aria-label="Language">
+  {
+    locales.map((code: Locale) => {
+      const href = switchLocalePath(pathname, code);
+      const current = code === locale;
+      return (
+        <a
+          class:list={['lang-switcher__btn', { 'is-current': current }]}
+          href={href}
+          lang={code === 'zh' ? 'zh-CN' : 'en'}
+          hreflang={code === 'zh' ? 'zh-CN' : 'en'}
+          aria-current={current ? 'true' : undefined}
+          data-locale-switch={code}
+        >
+          {localeLabels[code]}
+        </a>
+      );
+    })
+  }
+</div>
+
+<style>
+  .lang-switcher {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.15rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.45rem;
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .lang-switcher__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 1.55rem;
+    padding: 0 0.45rem;
+    border-radius: 0.3rem;
+    text-decoration: none;
+    color: var(--color-muted);
+    font-size: 0.7rem;
+    font-weight: 650;
+    letter-spacing: 0.02em;
+    line-height: 1;
+  }
+
+  .lang-switcher__btn:hover {
+    color: var(--color-ink);
+  }
+
+  .lang-switcher__btn.is-current {
+    background: rgba(240, 185, 11, 0.16);
+    color: var(--color-brand);
+  }
+</style>
+
+<script>
+  document.querySelectorAll('[data-locale-switch]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const code = el.getAttribute('data-locale-switch');
+      if (code === 'zh' || code === 'en') {
+        try {
+          localStorage.setItem('whaint-locale', code);
+        } catch {
+          /* ignore */
+        }
+      }
+    });
+  });
+</script>

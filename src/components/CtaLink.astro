@@ -1,0 +1,22 @@
+---
+import { getLocale, localizePath } from '../i18n';
+import { site } from '../lib/site';
+
+interface Props {
+  label?: string;
+  variant?: 'primary' | 'ghost' | 'outline';
+  href?: string;
+}
+
+const { label = '进入产品站', variant = 'primary', href } = Astro.props;
+
+const locale = getLocale(Astro.currentLocale);
+const isInternal = Boolean(href && href.startsWith('/'));
+const resolvedHref = href ? (isInternal ? localizePath(href, locale) : href) : site.appUrl;
+
+const className = `btn btn-${variant}`;
+---
+
+<a class={className} href={resolvedHref} rel={isInternal ? undefined : 'noopener noreferrer'}>
+  {label}
+</a>

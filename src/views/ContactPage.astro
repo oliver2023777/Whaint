@@ -1,0 +1,124 @@
+---
+import ContactChannels from '../components/ContactChannels.astro';
+import Icon from '../components/Icon.astro';
+import PageCtaBand from '../components/PageCtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLocale, getMessages } from '../i18n';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const c = t.contact;
+---
+
+<BaseLayout title={c.title} description={c.description} path="/contact">
+  <PageHero kicker={c.kicker} title={c.pageTitle} lede={c.lede} />
+
+  <section class="section section-split">
+    <div class="wrap">
+      <div class="contact-block contact-block--top">
+        <p class="section-kicker">{c.channels.kicker}</p>
+        <h2>{c.channels.heading}</h2>
+        <p class="contact-block__lede">{c.channels.lede}</p>
+        <ContactChannels variant="card" />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-split">
+    <div class="wrap">
+      <p class="section-kicker">{c.deliver.kicker}</p>
+      <h2>{c.deliver.heading}</h2>
+      <ul class="trust-grid trust-grid--deliver">
+        {
+          t.home.deliver.items.map((item) => (
+            <li>
+              <span class="feature-icon" aria-hidden="true">
+                <Icon name={item.icon} size={22} />
+              </span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section-split">
+    <div class="wrap">
+      <p class="section-kicker">{c.boundary.kicker}</p>
+      <h2>{c.boundary.heading}</h2>
+      <div class="info-grid info-grid--3" style="margin-top: 1.5rem">
+        {
+          c.boundary.cards.map((card) => (
+            <article class:list={['info-card', card.variant === 'no' && 'info-card--no']}>
+              <span class="feature-icon" aria-hidden="true">
+                <Icon name={card.icon} size={20} />
+              </span>
+              <h3 class="info-card__title">{card.title}</h3>
+              <ul class:list={['info-list', card.variant === 'no' && 'info-list--cross']}>
+                {card.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-split">
+    <div class="wrap">
+      <p class="section-kicker">{c.prepare.kicker}</p>
+      <h2>{c.prepare.heading}</h2>
+      <div class="info-grid info-grid--2" style="margin-top: 1.5rem">
+        <article class="info-card">
+          <span class="feature-icon" aria-hidden="true">
+            <Icon name={c.prepare.communicate.icon} size={20} />
+          </span>
+          <h2 class="info-card__title">{c.prepare.communicate.title}</h2>
+          <ul class="info-list">
+            {c.prepare.communicate.items.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+        <article class="info-card">
+          <span class="feature-icon" aria-hidden="true">
+            <Icon name={c.prepare.boundaries.icon} size={20} />
+          </span>
+          <h2 class="info-card__title">{c.prepare.boundaries.title}</h2>
+          <ul class="info-list">
+            {c.prepare.boundaries.items.map((item) => <li>{item}</li>)}
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <PageCtaBand
+    title={c.cta.title}
+    highlight={c.cta.highlight}
+    suffix={c.cta.suffix}
+    sub={c.cta.sub}
+  />
+</BaseLayout>
+
+<style>
+  .contact-block--top {
+    margin-top: 0;
+  }
+
+  .contact-block h2 {
+    margin: 0 0 0.45rem;
+    font-size: 1.125rem;
+  }
+
+  .contact-block__lede {
+    margin: 0;
+    max-width: 36rem;
+    color: #a1a1aa;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+</style>

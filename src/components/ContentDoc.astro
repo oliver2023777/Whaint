@@ -1,0 +1,15 @@
+---
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { marked } from '../lib/markdown';
+
+interface Props {
+  file: string;
+}
+
+const { file } = Astro.props;
+const raw = readFileSync(join(process.cwd(), 'content', file), 'utf8');
+const html = marked(raw);
+---
+
+<div class="prose" set:html={html} />

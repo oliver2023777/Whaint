@@ -1,0 +1,336 @@
+---
+import BrandMark from './BrandMark.astro';
+import Icon from './Icon.astro';
+import { getLocale, getMessages, localizePath } from '../i18n';
+import { contacts, site } from '../lib/site';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const year = new Date().getFullYear();
+
+const productNav = t.footer.productLinks;
+const resourceNav = t.footer.resourceLinks;
+
+const contactItems = [
+  {
+    icon: 'chat' as const,
+    value: contacts.qq,
+    href: `tencent://message/?uin=${contacts.qq}`,
+  },
+  {
+    icon: 'plane' as const,
+    value: contacts.telegram,
+    href: contacts.telegramUrl,
+    external: true,
+  },
+  {
+    icon: 'globe' as const,
+    value: contacts.demoHost,
+    href: contacts.demoUrl,
+    external: true,
+    demo: true,
+  },
+];
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <BrandMark href={localizePath('/', locale)} size="sm" />
+        <p class="site-footer__tag">{t.footer.tagline}</p>
+        <p class="site-footer__note">{t.footer.complianceFootnote}</p>
+      </div>
+
+      <div class="site-footer__links">
+        <nav class="site-footer__col" aria-label={t.common.productNavAria}>
+          <h4 class="site-footer__heading">{t.footer.productNav}</h4>
+          <ul class="site-footer__list">
+            {productNav.map((item) => (
+              <li>
+                <a href={localizePath(item.href, locale)}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <nav class="site-footer__col" aria-label={t.common.resourceNavAria}>
+          <h4 class="site-footer__heading">{t.footer.resources}</h4>
+          <ul class="site-footer__list">
+            {resourceNav.map((item) => (
+              <li>
+                <a href={localizePath(item.href, locale)}>{item.label}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <div class="site-footer__col site-footer__col--contact">
+          <h4 class="site-footer__heading">{t.footer.contactUs}</h4>
+          <ul class="site-footer__list site-footer__list--contact">
+            {contactItems.map((item) => (
+              <li>
+                <a
+                  class:list={['site-footer__contact', item.demo && 'is-demo']}
+                  href={item.href}
+                  rel={item.external ? 'noopener noreferrer' : undefined}
+                  target={item.external ? '_blank' : undefined}
+                >
+                  <span class="site-footer__contact-ico" aria-hidden="true">
+                    <Icon name={item.icon} size={15} />
+                  </span>
+                  <span class="site-footer__contact-body">
+                    <span class:list={[item.demo ? 'site-footer__demo' : 'site-footer__mono']}>
+                      {item.value}
+                    </span>
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="site-footer__bar">
+      <div>© {year} {site.displayName}. All rights reserved.</div>
+      <div>{t.footer.barNote}</div>
+    </div>
+  </div>
+</footer>
+
+<style is:global>
+  .site-footer {
+    margin-top: auto;
+    width: 100%;
+    border-top: 1px solid rgba(39, 39, 42, 0.8);
+    background: #050608;
+    color: #a1a1aa;
+    font-size: 0.875rem;
+    padding: 2.75rem 1.5rem 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer {
+      padding: 4rem 3rem 3rem;
+    }
+  }
+
+  .site-footer__inner {
+    width: min(100%, var(--max-w, 72rem));
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .site-footer__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    padding-bottom: 1.75rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 900px) {
+    .site-footer__grid {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 4rem;
+      padding-bottom: 2.75rem;
+    }
+  }
+
+  .site-footer__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    max-width: 26rem;
+    width: 100%;
+    flex: 0 0 auto;
+  }
+
+  @media (min-width: 900px) {
+    .site-footer__brand {
+      flex: 0 1 26rem;
+    }
+  }
+
+  .site-footer__links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .site-footer__links {
+      grid-template-columns: repeat(3, max-content);
+      column-gap: 3.25rem;
+      row-gap: 1.5rem;
+    }
+  }
+
+  @media (min-width: 900px) {
+    .site-footer__links {
+      margin-left: auto;
+      flex: 0 0 auto;
+      column-gap: 3.75rem;
+    }
+  }
+
+  .site-footer__col--contact {
+    min-width: 11.5rem;
+  }
+
+  .site-footer__tag {
+    margin: 0;
+    color: #d4d4d8;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.55;
+  }
+
+  .site-footer__note {
+    margin: 0.15rem 0 0;
+    padding-top: 0.85rem;
+    border-top: 1px solid rgba(39, 39, 42, 0.65);
+    color: #71717a;
+    font-size: 0.875rem;
+    line-height: 1.65;
+  }
+
+  .site-footer__heading {
+    margin: 0 0 1rem;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    color: #f4f4f5;
+  }
+
+  .site-footer ul.site-footer__list,
+  .site-footer .site-footer__list {
+    list-style: none !important;
+    list-style-type: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .site-footer .site-footer__list > li {
+    list-style: none !important;
+    list-style-type: none !important;
+    margin: 0;
+    padding: 0;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #a1a1aa;
+  }
+
+  .site-footer .site-footer__list > li::marker {
+    content: none;
+    display: none;
+  }
+
+  .site-footer .site-footer__list a {
+    color: #a1a1aa;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: color 160ms ease;
+  }
+
+  .site-footer .site-footer__list a:hover {
+    color: #f0b90b;
+  }
+
+  .site-footer__list--contact {
+    gap: 0.9rem !important;
+  }
+
+  .site-footer__contact {
+    display: flex !important;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+  }
+
+  .site-footer__contact-ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 1.65rem;
+    width: 1.65rem;
+    height: 1.65rem;
+    margin-top: 0;
+    border-radius: 0.4rem;
+    color: var(--color-brand);
+    background: rgba(240, 185, 11, 0.1);
+    border: 1px solid rgba(240, 185, 11, 0.28);
+    line-height: 0;
+  }
+
+  .site-footer__contact-ico :global(svg),
+  .site-footer__contact-ico svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+  }
+
+  .site-footer__contact-body {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .site-footer__mono {
+    font-family: var(--font-mono);
+    color: #e4e4e7;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+    line-height: 1.35;
+  }
+
+  .site-footer__contact:hover .site-footer__mono {
+    color: #f0b90b;
+  }
+
+  .site-footer__contact:hover .site-footer__contact-ico {
+    background: rgba(240, 185, 11, 0.16);
+    border-color: rgba(240, 185, 11, 0.45);
+  }
+
+  .site-footer__demo {
+    font-family: var(--font-mono);
+    color: #f0b90b;
+    font-size: 0.875rem;
+    letter-spacing: 0.01em;
+    line-height: 1.35;
+  }
+
+  .site-footer__contact.is-demo:hover .site-footer__demo {
+    text-decoration: underline;
+  }
+
+  .site-footer__bar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(39, 39, 42, 0.8);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: #71717a;
+  }
+
+  @media (min-width: 768px) {
+    .site-footer__bar {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+</style>

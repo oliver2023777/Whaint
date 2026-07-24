@@ -1,0 +1,18 @@
+---
+import { getLocale, getMessages } from '../i18n';
+
+interface Props {
+  text?: string;
+  panel?: boolean;
+  as?: 'p' | 'blockquote';
+}
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+
+const { text = t.definition, panel = false, as: Tag = 'p' } = Astro.props;
+
+const className = ['definition', panel && 'definition--panel'].filter(Boolean).join(' ');
+---
+
+<Tag class={className} data-definition-block>{text}</Tag>
