@@ -121,10 +121,10 @@
 ```bash
 git clone https://github.com/oliver2023777/Whaint.git
 cd Whaint
-./start.sh             # 无 .env 时自动从 .env.example 生成
+./start.sh             # 无 .env 时自动生成；固定端口 3080
 ```
 
-改域名：编辑 `.env` 的 `PUBLIC_SITE_URL` 后执行 `./start.sh start --build`。
+访问：`http://服务器IP:3080`。改域名：编辑 `.env` 的 `PUBLIC_SITE_URL` 后执行 `./start.sh start --build`。
 
 ---
 

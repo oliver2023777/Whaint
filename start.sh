@@ -2,19 +2,21 @@
 # ═══════════════════════════════════════════════════════════════
 # Whaint · 营销站一键启动（Docker）
 #
-#   ./start.sh                 # 构建并启动
+#   ./start.sh                 # 构建并启动 → http://IP:3080
 #   ./start.sh start           # 仅启动（不重建）
 #   ./start.sh start --build   # 强制重建并启动
 #   ./start.sh stop|restart|logs|status|help
 #
-# 首次：直接 ./start.sh（无 .env 时会从 .env.example 自动生成）
-# 改域名：编辑 .env 里的 PUBLIC_SITE_URL → ./start.sh start --build
+# 无 .env 时会从 .env.example 自动生成；端口固定 3080（见 docker-compose.yml）
 # ═══════════════════════════════════════════════════════════════
 
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
+
+# 与 docker-compose.yml 保持一致
+PORT=3080
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -55,6 +57,18 @@ usage() {
   sed -n '2,12p' "$0"
 }
 
+show_access() {
+  local mapped
+  mapped="$(docker port whaint 80 2>/dev/null || true)"
+  if [[ -z "$mapped" ]]; then
+    err "容器已起，但没有端口映射！请执行：docker logs whaint"
+    err "确认本机 3080 是否被占用：ss -lntp | grep 3080"
+    return 1
+  fi
+  ok "营销站已启动 → http://服务器IP:${PORT}/"
+  info "端口映射：${mapped} · 日志：./start.sh logs · 停止：./start.sh stop"
+}
+
 cmd="${1:-up}"
 shift || true
 FORCE_BUILD=0
@@ -69,39 +83,8 @@ done
 detect_compose
 ensure_env
 
-# shellcheck disable=SC1091
-set -a
-# 读取 .env 供 compose build args
-# shellcheck source=/dev/null
-source .env
-set +a
-
-PORT="${WHAINT_PORT:-3080}"
-
-# 若宿主机 80 已被占用，compose 可能起失败；默认走 3080
-warn_if_port_busy() {
-  if command -v ss >/dev/null 2>&1; then
-    if ss -lnt | awk '{print $4}' | grep -qE "[:.]${PORT}\$"; then
-      warn "端口 ${PORT} 似乎已被占用。可改 .env 里的 WHAINT_PORT 后再启动。"
-    fi
-  fi
-}
-
-show_access() {
-  local mapped
-  mapped="$(docker port whaint 80 2>/dev/null || true)"
-  if [[ -z "$mapped" ]]; then
-    err "容器已起，但没有端口映射！请执行：docker logs whaint"
-    err "或改 .env 的 WHAINT_PORT 后：./start.sh stop && ./start.sh"
-    return 1
-  fi
-  ok "营销站已启动 → http://服务器IP:${PORT}/"
-  info "端口映射：${mapped} · 日志：./start.sh logs · 停止：./start.sh stop"
-}
-
 case "$cmd" in
   up|start|"")
-    warn_if_port_busy
     if [[ "$cmd" == "start" && "$FORCE_BUILD" -eq 0 ]]; then
       info "启动容器（不重建）…"
       "${COMPOSE[@]}" up -d
