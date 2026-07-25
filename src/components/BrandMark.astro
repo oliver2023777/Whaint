@@ -4,13 +4,16 @@ import { site } from '../lib/site';
 /**
  * 品牌标：对齐产品站 HeaderBar / BrandMark
  * 鲸擎（金）· Whale（白）Core（金）
+ * intro：每次加载由脚本挂上 --intro，播淡入 + 扫光 + 光晕 + 鲸标轻摆
  */
 interface Props {
   href?: string;
   size?: 'sm' | 'md';
+  /** 是否播放加载动画（顶栏默认开，页脚关） */
+  intro?: boolean;
 }
 
-const { href, size = 'md' } = Astro.props;
+const { href, size = 'md', intro = size === 'md' } = Astro.props;
 const Tag = href ? 'a' : 'span';
 ---
 
@@ -18,7 +21,9 @@ const Tag = href ? 'a' : 'span';
   class:list={['brand-mark', `brand-mark--${size}`]}
   href={href}
   aria-label={site.displayName}
+  data-brand-mark={intro ? 'intro' : undefined}
 >
+  <span class="brand-mark__shine" aria-hidden="true"></span>
   <img
     class="brand-mark__logo"
     src="/icons/whalecore.svg"
@@ -28,6 +33,7 @@ const Tag = href ? 'a' : 'span';
     draggable="false"
   />
   <span class="brand-mark__name">
+    <span class="brand-mark__glow" aria-hidden="true"></span>
     <span class="brand-mark__zh">鲸擎</span>
     <span class="brand-mark__dot" aria-hidden="true">·</span>
     <span class="brand-mark__en">
@@ -36,34 +42,81 @@ const Tag = href ? 'a' : 'span';
   </span>
 </Tag>
 
-<style>
+{
+  intro && (
+    <script>
+      const play = (el) => {
+        el.classList.remove('brand-mark--intro');
+        void el.offsetWidth;
+        el.classList.add('brand-mark--intro');
+      };
+
+      const run = () => {
+        document.querySelectorAll('[data-brand-mark="intro"]').forEach((el) => {
+          if (el instanceof HTMLElement) play(el);
+        });
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => requestAnimationFrame(run), { once: true });
+      } else {
+        requestAnimationFrame(run);
+      }
+    </script>
+  )
+}
+
+<style is:global>
   .brand-mark {
+    position: relative;
     display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 0.5rem;
+    height: 2.25rem;
+    overflow: visible;
     text-decoration: none;
     color: inherit;
     flex-shrink: 0;
     line-height: 1;
+    transition: opacity 0.2s ease;
+  }
+
+  .brand-mark:hover {
+    opacity: 0.9;
   }
 
   .brand-mark__logo {
     display: block;
+    flex: 0 0 2rem;
     width: 2rem;
     height: 2rem;
     object-fit: contain;
+    transform-origin: 50% 90%;
+  }
+
+  .brand-mark--sm {
+    height: 2rem;
+    gap: 0.4rem;
   }
 
   .brand-mark--sm .brand-mark__logo {
+    flex-basis: 1.75rem;
     width: 1.75rem;
     height: 1.75rem;
   }
 
   .brand-mark__name {
     position: relative;
+    z-index: 1;
     display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
     align-items: baseline;
+    isolation: isolate;
     white-space: nowrap;
+    line-height: 1;
     font-family: var(--font-display);
     font-weight: 600;
     font-size: 1.125rem;
@@ -72,6 +125,13 @@ const Tag = href ? 'a' : 'span';
 
   .brand-mark--sm .brand-mark__name {
     font-size: 1.05rem;
+  }
+
+  .brand-mark__zh,
+  .brand-mark__dot,
+  .brand-mark__en {
+    position: relative;
+    z-index: 1;
   }
 
   .brand-mark__zh {
@@ -89,5 +149,135 @@ const Tag = href ? 'a' : 'span';
 
   .brand-mark__core {
     color: #d4af37;
+  }
+
+  .brand-mark__shine {
+    pointer-events: none;
+    position: absolute;
+    top: -14px;
+    bottom: -14px;
+    left: -20px;
+    z-index: 2;
+    width: calc(100% + 56px);
+    background: linear-gradient(
+      105deg,
+      transparent 0%,
+      transparent 34%,
+      rgba(245, 230, 200, 0.12) 42%,
+      rgba(255, 243, 214, 0.55) 48%,
+      rgba(255, 248, 230, 0.82) 50%,
+      rgba(232, 201, 140, 0.35) 52%,
+      rgba(245, 230, 200, 0.1) 58%,
+      transparent 66%,
+      transparent 100%
+    );
+    filter: blur(0.4px);
+    opacity: 0;
+    transform: translateX(-105%) skewX(-12deg);
+  }
+
+  .brand-mark__glow {
+    pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: -8px;
+    right: -8px;
+    z-index: 0;
+    height: 64px;
+    margin-top: -32px;
+    background: radial-gradient(
+      ellipse 70% 100% at 50% 50%,
+      rgba(240, 185, 11, 0.22) 0%,
+      rgba(212, 175, 55, 0.1) 48%,
+      transparent 72%
+    );
+    opacity: 0;
+    transform: scaleX(0.96);
+  }
+
+  .brand-mark--sm .brand-mark__shine,
+  .brand-mark--sm .brand-mark__glow {
+    display: none;
+  }
+
+  .brand-mark--intro {
+    animation: whaint-brand-fade 0.65s ease-out both;
+  }
+
+  .brand-mark--intro .brand-mark__logo {
+    animation: whaint-brand-tail 1.05s ease-in-out 0.28s both;
+  }
+
+  .brand-mark--intro .brand-mark__shine {
+    animation: whaint-brand-shine 1.15s ease-in-out 0.5s both;
+  }
+
+  .brand-mark--intro .brand-mark__glow {
+    animation: whaint-brand-glow 1.35s ease-out 0.45s both;
+  }
+
+  @keyframes whaint-brand-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes whaint-brand-shine {
+    0% {
+      opacity: 0;
+      transform: translateX(-105%) skewX(-12deg);
+    }
+    14% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(100%) skewX(-12deg);
+    }
+  }
+
+  @keyframes whaint-brand-glow {
+    0% {
+      opacity: 0;
+      transform: scaleX(0.96);
+    }
+    40% {
+      opacity: 0.85;
+      transform: scaleX(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scaleX(1.04);
+    }
+  }
+
+  @keyframes whaint-brand-tail {
+    0% {
+      transform: rotate(0deg);
+    }
+    28% {
+      transform: rotate(14deg);
+    }
+    58% {
+      transform: rotate(-8deg);
+    }
+    82% {
+      transform: rotate(3deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brand-mark--intro,
+    .brand-mark--intro .brand-mark__logo,
+    .brand-mark--intro .brand-mark__shine,
+    .brand-mark--intro .brand-mark__glow {
+      animation: none;
+    }
   }
 </style>

@@ -1,0 +1,561 @@
+---
+import { getLocale, getMessages, localizePath, stripLocale } from '../i18n';
+import { screenshotSrc, type ScreenshotId } from '../lib/screenshots';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const f = t.product.features;
+const shotCopy = t.showcase.items;
+const showMoreLink = (stripLocale(Astro.url.pathname).replace(/\/$/, '') || '/') !== '/product';
+
+const modules = f.modules.map((mod, index) => {
+  const shots = mod.shots.map((shot) => {
+    const id = shot.id as ScreenshotId;
+    return {
+      id,
+      path: shot.path,
+      src: screenshotSrc(id),
+      title: shotCopy[id].title,
+      desc: shotCopy[id].desc,
+    };
+  });
+  return {
+    ...mod,
+    flip: index % 2 === 1,
+    primary: shots[0],
+    secondary: shots.slice(1, 3),
+  };
+});
+---
+
+<nav class="pill-sticky" data-feature-sticky aria-label={f.navAria}>
+  <div class="wrap pill-nav">
+    {
+      modules.map((mod) => (
+        <a class="pill-nav__item" href={`#feature-${mod.id}`} data-feature-nav={mod.id}>
+          {mod.nav}
+        </a>
+      ))
+    }
+  </div>
+</nav>
+
+<section class="section section-split feature-showcase" aria-labelledby="showcase-heading" data-feature-showcase>
+  <div class="wrap">
+    <header class="feature-showcase__intro">
+      <div class="feature-showcase__intro-main">
+        <p class="feature-showcase__index">
+          <span class="feature-showcase__index-mark" aria-hidden="true"></span>
+          {f.kicker}
+        </p>
+        <h2 id="showcase-heading" class="feature-showcase__title">{f.heading}</h2>
+      </div>
+      <p class="feature-showcase__lede">{f.lede}</p>
+    </header>
+
+    <div class="feature-mods">
+      {
+        modules.map((mod, mi) => (
+          <article
+            class:list={['feature-mod', mod.flip && 'feature-mod--flip']}
+            id={`feature-${mod.id}`}
+            data-feature-mod={mod.id}
+          >
+            <div class="feature-mod__copy">
+              <p class="feature-mod__tag">{mod.tag}</p>
+              <h3 class="feature-mod__title">{mod.title}</h3>
+              <p class="feature-mod__desc">{mod.desc}</p>
+              <ul class="feature-mod__list">
+                {mod.features.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+
+            <div class="feature-mod__media" data-feature-media>
+              {mod.primary && (
+                <figure class="soft-mock soft-mock--primary">
+                  <div class="soft-mock__chrome" aria-hidden="true">
+                    <span class="soft-mock__dot soft-mock__dot--r"></span>
+                    <span class="soft-mock__dot soft-mock__dot--y"></span>
+                    <span class="soft-mock__dot soft-mock__dot--g"></span>
+                    <span class="soft-mock__path" data-stage-path>
+                      {mod.primary.path}
+                    </span>
+                  </div>
+                  <div class="soft-mock__shot">
+                    <img
+                      data-stage-img
+                      src={mod.primary.src}
+                      alt={`${mod.primary.title} — ${mod.primary.desc}`}
+                      width="2462"
+                      height="1692"
+                      loading={mi === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
+                  </div>
+                </figure>
+              )}
+
+              {mod.secondary.length > 0 && (
+                <div
+                  class:list={[
+                    'feature-mod__thumbs',
+                    mod.secondary.length === 1 && 'feature-mod__thumbs--single',
+                  ]}
+                  role="listbox"
+                  aria-label={mod.title}
+                >
+                  {mod.secondary.map((shot) => (
+                    <button
+                      type="button"
+                      class="soft-mock soft-mock--secondary"
+                      role="option"
+                      aria-selected="false"
+                      data-thumb-src={shot.src}
+                      data-thumb-path={shot.path}
+                      data-thumb-alt={`${shot.title} — ${shot.desc}`}
+                      aria-label={
+                        locale === 'en'
+                          ? `Show ${shot.title} in preview`
+                          : `在主图中查看${shot.title}`
+                      }
+                    >
+                      <div class="soft-mock__chrome" aria-hidden="true">
+                        <span class="soft-mock__dot soft-mock__dot--r"></span>
+                        <span class="soft-mock__dot soft-mock__dot--y"></span>
+                        <span class="soft-mock__dot soft-mock__dot--g"></span>
+                        <span class="soft-mock__path" data-thumb-path-label>
+                          {shot.path}
+                        </span>
+                      </div>
+                      <div class="soft-mock__shot">
+                        <img
+                          data-thumb-img
+                          src={shot.src}
+                          alt=""
+                          width="1231"
+                          height="846"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="feature-showcase__note">{f.note}</p>
+    {
+      showMoreLink && (
+        <p class="feature-showcase__more">
+          <a href={localizePath('/product', locale)}>{f.moreLink}</a>
+        </p>
+      )
+    }
+  </div>
+</section>
+
+<style>
+  .feature-showcase__intro {
+    display: grid;
+    gap: 1.15rem;
+    padding-bottom: clamp(1.25rem, 3vw, 1.75rem);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  @media (min-width: 860px) {
+    .feature-showcase__intro {
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+      gap: 2.5rem;
+      align-items: end;
+    }
+  }
+
+  .feature-showcase__index {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0 0 0.85rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 550;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-brand);
+  }
+
+  .feature-showcase__index-mark {
+    width: 1.35rem;
+    height: 1px;
+    background: linear-gradient(90deg, var(--color-brand), transparent);
+  }
+
+  .feature-showcase__title {
+    margin: 0;
+    max-width: 12em;
+    font-size: clamp(1.85rem, 4.2vw, 2.65rem);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1.12;
+    color: var(--color-ink);
+  }
+
+  .feature-showcase__lede {
+    margin: 0;
+    max-width: 34rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+  }
+
+  @media (min-width: 860px) {
+    .feature-showcase__lede {
+      justify-self: end;
+      text-align: right;
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+  }
+
+  .feature-mods {
+    display: grid;
+    gap: 0;
+    margin-top: clamp(2rem, 5vw, 3.25rem);
+  }
+
+  .feature-mod {
+    display: grid;
+    gap: 1.5rem;
+    scroll-margin-top: calc(var(--header-h) + 3.75rem);
+  }
+
+  .feature-mod + .feature-mod {
+    margin-top: clamp(3rem, 8vw, 5.5rem);
+    padding-top: clamp(3rem, 8vw, 5.5rem);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .feature-mod__tag {
+    margin: 0 0 0.65rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--color-brand);
+  }
+
+  .feature-mod__title {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.6vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    color: var(--color-ink);
+  }
+
+  .feature-mod__desc {
+    margin: 0.75rem 0 0;
+    color: var(--color-ink-soft);
+    font-size: 0.98rem;
+    line-height: 1.65;
+  }
+
+  .feature-mod__list {
+    list-style: none;
+    margin: 1.15rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.65rem;
+  }
+
+  .feature-mod__list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    color: #d4d4d8;
+    font-size: 0.875rem;
+    line-height: 1.55;
+  }
+
+  .feature-mod__list li::before {
+    content: '';
+    flex: 0 0 0.9rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    margin-top: 0.2rem;
+    background: var(--icon-check) center / contain no-repeat;
+  }
+
+  .feature-mod__media {
+    display: grid;
+    gap: 0.75rem;
+    min-width: 0;
+  }
+
+  .feature-mod__thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+
+  .feature-mod__thumbs--single {
+    grid-template-columns: minmax(0, 1fr);
+    max-width: 70%;
+  }
+
+  .soft-mock {
+    margin: 0;
+    padding: 0.45rem;
+    overflow: hidden;
+    border: 1px solid rgba(39, 39, 42, 0.95);
+    border-radius: 1rem;
+    background: #09090b;
+    box-shadow: 0 0 50px rgba(234, 179, 8, 0.08);
+    transition:
+      border-color 220ms var(--ease-out),
+      box-shadow 220ms var(--ease-out);
+  }
+
+  .soft-mock:hover {
+    border-color: rgba(234, 179, 8, 0.32);
+    box-shadow: 0 0 56px rgba(234, 179, 8, 0.14);
+  }
+
+  .soft-mock--secondary {
+    display: block;
+    width: 100%;
+    padding: 0.35rem;
+    border-radius: 0.75rem;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .soft-mock--secondary:focus-visible {
+    outline: none;
+    border-color: rgba(234, 179, 8, 0.55);
+    box-shadow: 0 0 0 1px rgba(234, 179, 8, 0.35);
+  }
+
+  .soft-mock--secondary.is-active {
+    border-color: rgba(234, 179, 8, 0.45);
+    box-shadow: 0 0 40px rgba(234, 179, 8, 0.12);
+  }
+
+  .soft-mock__chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.4rem;
+    padding: 0.25rem 0.45rem 0.45rem;
+    border-bottom: 1px solid rgba(39, 39, 42, 0.7);
+  }
+
+  .soft-mock--secondary .soft-mock__chrome {
+    margin-bottom: 0.3rem;
+    padding: 0.15rem 0.3rem 0.35rem;
+  }
+
+  .soft-mock__dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+  }
+
+  .soft-mock--secondary .soft-mock__dot {
+    width: 0.4rem;
+    height: 0.4rem;
+  }
+
+  .soft-mock__dot--r {
+    background: rgba(239, 68, 68, 0.85);
+  }
+  .soft-mock__dot--y {
+    background: rgba(234, 179, 8, 0.85);
+  }
+  .soft-mock__dot--g {
+    background: rgba(34, 197, 94, 0.85);
+  }
+
+  .soft-mock__path {
+    margin-left: 0.45rem;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.02em;
+    color: #52525b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .soft-mock--secondary .soft-mock__path {
+    font-size: 0.55rem;
+  }
+
+  .soft-mock__shot {
+    overflow: hidden;
+    border-radius: 0.7rem;
+    background: #050608;
+  }
+
+  .soft-mock--secondary .soft-mock__shot {
+    border-radius: 0.5rem;
+    aspect-ratio: 16 / 10;
+  }
+
+  .soft-mock__shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: opacity 180ms var(--ease-out);
+  }
+
+  .soft-mock__shot img.is-swap {
+    opacity: 0.35;
+  }
+
+  .soft-mock--secondary .soft-mock__shot img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .feature-showcase__note {
+    margin: clamp(2rem, 5vw, 3rem) 0 0;
+    color: var(--color-muted);
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+
+  .feature-showcase__more {
+    margin: 1rem 0 0;
+  }
+
+  .feature-showcase__more a {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .feature-showcase__more a:hover {
+    text-decoration: underline;
+  }
+
+  @media (min-width: 1000px) {
+    .feature-mod {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .feature-mod--flip .feature-mod__copy {
+      order: 2;
+    }
+
+    .feature-mod--flip .feature-mod__media {
+      order: 1;
+    }
+  }
+</style>
+
+<script>
+  const sticky = document.querySelector('[data-feature-sticky]');
+  const showcase = document.querySelector('[data-feature-showcase]');
+  if (sticky && showcase) {
+    const links = Array.from(sticky.querySelectorAll('[data-feature-nav]'));
+    const mods = Array.from(showcase.querySelectorAll('[data-feature-mod]'));
+
+    const setActive = (id) => {
+      links.forEach((link) => {
+        const on = link.getAttribute('data-feature-nav') === id;
+        link.classList.toggle('is-active', on);
+      });
+    };
+
+    if (mods[0]) setActive(mods[0].getAttribute('data-feature-mod') || '');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0]?.target;
+        if (top instanceof HTMLElement) {
+          setActive(top.getAttribute('data-feature-mod') || '');
+        }
+      },
+      {
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0.1, 0.25, 0.5],
+      }
+    );
+
+    mods.forEach((mod) => observer.observe(mod));
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        const id = link.getAttribute('data-feature-nav');
+        if (id) setActive(id);
+      });
+    });
+  }
+
+  document.querySelectorAll('[data-feature-media]').forEach((media) => {
+    const stageImg = media.querySelector('[data-stage-img]');
+    const stagePath = media.querySelector('[data-stage-path]');
+    const thumbs = Array.from(media.querySelectorAll('.soft-mock--secondary'));
+    if (!(stageImg instanceof HTMLImageElement) || !thumbs.length) return;
+
+    let swapTimer = 0;
+
+    thumbs.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const nextSrc = btn.getAttribute('data-thumb-src') || '';
+        const nextPath = btn.getAttribute('data-thumb-path') || '';
+        const nextAlt = btn.getAttribute('data-thumb-alt') || '';
+        const thumbImg = btn.querySelector('[data-thumb-img]');
+        const thumbPathLabel = btn.querySelector('[data-thumb-path-label]');
+        if (!(thumbImg instanceof HTMLImageElement)) return;
+
+        const prevSrc = stageImg.getAttribute('src') || '';
+        const prevPath = stagePath?.textContent?.trim() || '';
+        const prevAlt = stageImg.getAttribute('alt') || '';
+
+        if (prevSrc === nextSrc) return;
+
+        window.clearTimeout(swapTimer);
+        stageImg.classList.add('is-swap');
+        swapTimer = window.setTimeout(() => {
+          stageImg.src = nextSrc;
+          stageImg.alt = nextAlt;
+          if (stagePath) stagePath.textContent = nextPath;
+
+          thumbImg.src = prevSrc;
+          btn.setAttribute('data-thumb-src', prevSrc);
+          btn.setAttribute('data-thumb-path', prevPath);
+          btn.setAttribute('data-thumb-alt', prevAlt);
+          if (thumbPathLabel) thumbPathLabel.textContent = prevPath;
+
+          const prevTitle = prevAlt.split(' — ')[0] || prevAlt;
+          btn.setAttribute(
+            'aria-label',
+            (btn.getAttribute('aria-label') || '').includes('Show')
+              ? `Show ${prevTitle} in preview`
+              : `在主图中查看${prevTitle}`
+          );
+
+          stageImg.classList.remove('is-swap');
+        }, 120);
+      });
+    });
+  });
+</script>

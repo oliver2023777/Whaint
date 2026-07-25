@@ -53,10 +53,11 @@ const allLd = [...defaultLd, ...extraLd];
           if (/bot|crawl|spider|slurp|bingpreview|facebookexternalhit/i.test(ua)) return;
 
           var KEY = 'whaint-locale';
-          if (localStorage.getItem(KEY)) return;
-
           var path = location.pathname || '/';
           var onEn = path === '/en' || path.indexOf('/en/') === 0;
+          var pathLocale = onEn ? 'en' : 'zh';
+          var saved = localStorage.getItem(KEY);
+
           function toEn(p) {
             if (p === '/' || p === '') return '/en';
             if (p === '/en' || p.indexOf('/en/') === 0) return p;
@@ -68,6 +69,13 @@ const allLd = [...defaultLd, ...extraLd];
             return p;
           }
 
+          // 已有偏好：以当前 URL 为准同步（手动点了中文/EN 或打开分享链接）
+          if (saved === 'zh' || saved === 'en') {
+            if (saved !== pathLocale) localStorage.setItem(KEY, pathLocale);
+            return;
+          }
+
+          // 首次访问：跟系统语言，并记住
           var primary = String(
             (navigator.languages && navigator.languages[0]) || navigator.language || 'zh',
           ).toLowerCase();

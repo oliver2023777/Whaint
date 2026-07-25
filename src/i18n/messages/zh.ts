@@ -13,6 +13,8 @@ export const zh = {
     productNavAria: '产品导航',
     resourceNavAria: '资源与合规',
     relatedPages: '相关页面：',
+    home: '首页',
+    breadcrumbAria: '面包屑',
   },
   nav: {
     product: '产品',
@@ -25,10 +27,10 @@ export const zh = {
     productNav: '产品导航',
     resources: '资源与合规',
     contactUs: '联系我们',
-    barNote: '软件授权交付 · 价格请咨询确认',
+    barNote: '源码交付 · 价格请咨询确认',
     tagline: '可对外运营的 AI 量化托管平台（完整源码）',
     complianceFootnote:
-      '鲸擎 · WhaleCore 是软件授权与运营系统交付，不接触用户交易资金，不提供投资建议，不承诺收益。对外运营资质由买家自理。',
+      '鲸擎 · WhaleCore 是源码与运营系统交付，不接触用户交易资金，不提供投资建议，不承诺收益。对外运营资质由买家自理。',
     productLinks: [
       { href: '/product', label: '产品' },
       { href: '/solutions', label: '运营模式' },
@@ -46,8 +48,10 @@ export const zh = {
     support:
       '完整源码 · Docker 一键部署与升级 · 策略市场 / 套餐 / 服务费 / 托管模式齐全。面向平台运营方，开箱即可配置对外服务。',
     console: {
-      chromeTitle: 'Update · maintain',
+      chromeTitle: 'whacore · update',
       liveBadge: 'EASY',
+      prompt: '~/whalecore',
+      command: './start.sh',
       tagline: '小白也能维护 · 一行命令在线更新 · 数据不丢',
       taglineHighlight: '一行命令',
       output: '✓ 拉取最新包并升级 · 自动保留 data/',
@@ -151,7 +155,7 @@ export const zh = {
       kicker: '变现',
       heading: '多样化变现，打造你的',
       headingHighlight: '商业闭环',
-      lede: '运营方变现模式已内置，开站即可组合套餐、服务费与增值解锁。',
+      lede: '运营方变现模式已内置，开站即可组合套餐订阅、服务费与权益升级。',
       cards: [
         {
           icon: 'package',
@@ -165,8 +169,8 @@ export const zh = {
         },
         {
           icon: 'key',
-          title: 'API & 模型加价',
-          desc: '内置 Key 额度转售与高级策略解锁机制，拓展平台侧增值收入。',
+          title: '权益与额度升级',
+          desc: '付费升级可解锁更多交易员 / 交易所额度与官方策略权益；终端用户仍自备交易所与模型 Key。',
         },
       ],
     },
@@ -191,11 +195,70 @@ export const zh = {
     define: {
       heading: '产品定义与合规边界',
     },
-    cta: {
-      title: '准备好开启你的',
-      highlight: 'AI 量化托管',
-      suffix: '业务了吗？',
-      sub: '一次性源码交付，无隐形扣费，独立部署，数据完全自控。',
+    terminal: {
+      kicker: '联系',
+      heading: '联系我们',
+      lede: '一对一询价：准备好关键信息后，通过下方通道联系我们。',
+      prepare: {
+        icon: 'chat',
+        title: '沟通前准备事项',
+        tip: '准备好这些信息，可大幅提高沟通效率，更快拿到针对性方案。',
+        items: [
+          '用途说明：自用 / 合法会员运营（须排除禁止用途）',
+          '期望交付形式：完整源码 · 是否需要代部署或定制',
+          '服务器环境：是否已有 Docker / 目标上线时间表',
+        ],
+        note: '仅讨论源码交付与运营服务；不提供投资建议或收益承诺；违法用途将拒单。',
+      },
+      channels: {
+        icon: 'plane',
+        title: '立即联系',
+        lede: '优先 QQ 或 Telegram；亦可先打开官方演示站了解产品形态。',
+      },
+    },
+  },
+  showcase: {
+    kicker: '实景',
+    heading: '真实产品界面',
+    lede: '策略市场、运行台、管理后台与变现模块开箱即有——以下逐屏展示交付源码对应的实际界面与用途。',
+    note: '界面示意。样板收益、历史表现与公开展示数据不构成投资建议或收益承诺。',
+    items: {
+      console: {
+        title: '交易运行台',
+        desc: '账户净值、持仓与 AI 决策记录统一视图',
+      },
+      market: {
+        title: '策略市场',
+        desc: '官方策略脱敏展示，终端用户一键跟单',
+      },
+      admin: {
+        title: '管理后台',
+        desc: '用户、策略、套餐、支付与日志集中运营',
+      },
+      strategy: {
+        title: '策略设置',
+        desc: '指标、风控、币种与情报参数可配',
+      },
+      'trader-board': {
+        title: '交易员大屏',
+        desc: '多交易员运行状态与关键指标一览',
+      },
+      traders: {
+        title: '交易员管理',
+        desc: '跨用户查看、启停与策略接管',
+      },
+      billing: {
+        title: '套餐与服务费',
+        desc: '订阅套餐、服务费记账与结清',
+      },
+      intel: {
+        title: '情报与资讯',
+        desc: '新闻情报接入，辅助策略决策',
+      },
+      positions: {
+        title: '历史仓位',
+        desc: '持仓与历史成交可追溯审计',
+      },
     },
   },
   product: {
@@ -206,12 +269,90 @@ export const zh = {
     pageTitle: '产品能力',
     lede:
       '鲸擎 · WhaleCore 完整源码交付：面向平台运营方的可收费 AI 量化托管系统，开箱即可配置策略市场、交易员与套餐体系。',
+    highlightsHeading: '你拿到什么',
     highlights: [
       { icon: 'rocket', title: '开箱可运营', desc: '策略市场、交易员、套餐、服务费、管理后台齐备' },
       { icon: 'code', title: '完整源码', desc: '前后端可改，品牌与域名由你配置' },
       { icon: 'toggle', title: '模式可切换', desc: '运营托管 ↔ 用户自选，后台一键切换' },
       { icon: 'container', title: 'Docker 部署', desc: '镜像打包上线，升级可保留 data' },
     ],
+    features: {
+      kicker: 'Product UI',
+      heading: '真实产品界面',
+      lede: '策略市场、运行台、管理后台与变现模块开箱即有——按模块浏览交付源码对应的实际界面。',
+      note: '界面示意。样板收益、历史表现与公开展示数据不构成投资建议或收益承诺。',
+      moreLink: '查看完整产品能力 →',
+      navAria: '产品模块导航',
+      modules: [
+        {
+          id: 'dashboard',
+          nav: '核心仪表盘',
+          tag: 'FEATURE 01',
+          title: '核心仪表盘',
+          desc: '账户净值、持仓、交易员大屏与历史仓位集中呈现，运营与终端用户都能快速掌握运行状态。',
+          features: [
+            '交易运行台：净值、持仓与 AI 决策记录统一视图',
+            '交易员大屏：多交易员运行状态与关键指标一览',
+            '历史仓位：持仓与成交可追溯审计',
+            'LIVE 看板风格，适合日常盯盘与交付演示',
+          ],
+          shots: [
+            { id: 'console', path: 'whacore.cn/console' },
+            { id: 'trader-board', path: 'whacore.cn/traders' },
+            { id: 'positions', path: 'whacore.cn/positions' },
+          ],
+        },
+        {
+          id: 'strategy',
+          nav: '策略与套餐',
+          tag: 'FEATURE 02',
+          title: '策略与套餐配置',
+          desc: '官方策略市场、策略参数与订阅套餐/服务费一体，支撑跟单获客与持续变现。',
+          features: [
+            '策略市场：脱敏展示，终端用户一键跟单',
+            '策略设置：指标、风控、币种与情报参数可配',
+            '套餐与服务费：订阅额度、记账与结清',
+            '商业规则后台可改，适配不同收费模型',
+          ],
+          shots: [
+            { id: 'market', path: 'whacore.cn/market' },
+            { id: 'strategy', path: 'whacore.cn/strategy' },
+            { id: 'billing', path: 'whacore.cn/billing' },
+          ],
+        },
+        {
+          id: 'terminal',
+          nav: '终端体验',
+          tag: 'FEATURE 03',
+          title: '终端用户体验',
+          desc: '交易员启停、策略接管与情报资讯面向终端用户，降低配置门槛、提高留存。',
+          features: [
+            '交易员管理：跨用户查看、启停与策略接管',
+            '情报与资讯：新闻情报接入，辅助策略决策',
+            '自连账户与密钥，资金始终用户自持',
+            '跟单路径清晰，适合会员站 / 跟单站场景',
+          ],
+          shots: [
+            { id: 'traders', path: 'whacore.cn/traders' },
+            { id: 'intel', path: 'whacore.cn/intel' },
+          ],
+        },
+        {
+          id: 'admin',
+          nav: '运营后台',
+          tag: 'FEATURE 04',
+          title: '运营管理后台',
+          desc: '用户、策略、套餐、支付与日志集中运营，托管/自选模式可后台切换。',
+          features: [
+            '用户、策略、套餐、支付与日志一站管理',
+            '运营托管 ↔ 用户自选一键切换',
+            '支付与服务费流水可追踪',
+            '面向平台运营方的完整后台能力',
+          ],
+          shots: [{ id: 'admin', path: 'whacore.cn/admin' }],
+        },
+      ],
+    },
     capabilities: {
       kicker: '能力',
       heading: '系统能力清单',
@@ -247,28 +388,40 @@ export const zh = {
     },
     monetize: {
       kicker: '变现',
-      heading: '运营方可怎么变现',
+      heading: '多样化变现',
       cards: [
         {
           icon: 'package',
           title: 'SaaS 订阅套餐',
-          desc: '支持按月 / 按年收取用户策略托管订阅费，套餐额度与有效期可配。',
+          items: [
+            '按月 / 按年收取策略托管订阅费',
+            '套餐额度与有效期可配',
+            '支持升级审核与套餐切换',
+          ],
         },
         {
           icon: 'chart',
           title: '分润 / 服务费',
-          desc: '灵活配置策略执行手续费与盈利抽成，后台可汇总结清。',
+          items: [
+            '灵活配置执行手续费与盈利抽成',
+            '后台汇总结清，流水可追踪',
+            '适配跟单站与会员站收费模型',
+          ],
         },
         {
           icon: 'key',
-          title: 'API & 模型加价',
-          desc: '内置 Key 额度转售与高级策略解锁机制，拓展平台侧增值收入。',
+          title: '权益与额度升级',
+          items: [
+            '付费升级解锁更多交易员 / 交易所额度',
+            '可绑定官方策略等会员权益',
+            '终端用户仍自备交易所与模型 Key',
+          ],
         },
       ],
       innerLinks: {
         prefix: '了解模式差异：',
         solutions: '运营模式',
-        contact: '价格与授权',
+        contact: '价格与交付',
       },
     },
   },
@@ -378,7 +531,7 @@ export const zh = {
     relatedLinks: {
       prefix: '相关页面：',
       product: '产品能力',
-      contact: '价格与授权',
+      contact: '价格与交付',
       compliance: '合规摘要',
     },
     items: [
@@ -410,36 +563,29 @@ export const zh = {
       {
         question: '如何了解价格？演示站在哪？',
         answer:
-          '可通过 QQ 613747777 或 Telegram @whacore 咨询授权与交付价格。官方演示站：https://whacore.cn 。具体方案以沟通确认为准。',
+          '可通过 QQ 613747777 或 Telegram @whacore 咨询采购与交付价格。官方演示站：https://whacore.cn 。具体方案以沟通确认为准。',
       },
     ],
   },
   contact: {
-    title: '价格与授权',
+    title: '价格与交付',
     description:
-      '鲸擎 · WhaleCore 源码授权与价格咨询：交付内容、授权边界，以及 QQ / Telegram / 演示站联系方式。不是理财收益产品；具体价格以沟通确认为准。',
+      '鲸擎 · WhaleCore 源码采购与商务询价：交付边界说明。不公开标价；具体方案以一对一沟通确认为准。',
     kicker: '价格',
-    pageTitle: '价格与授权',
-    lede: '软件授权与源码交付，不是理财收益产品。请先了解交付范围与授权边界，再通过 QQ / Telegram 确认价格和交付细节。',
-    channels: {
-      kicker: '渠道',
-      heading: '直接联系',
-      lede: '选择下方渠道即可联系；建议优先通过 QQ 或 Telegram 沟通，也可先打开演示站体验产品形态。',
-    },
-    deliver: {
-      kicker: '交付',
-      heading: '交付包含',
-    },
+    pageTitle: '价格与交付',
+    lede: '根据您的部署需求与二次开发范围提供针对性商务报价。请先了解交付边界，随后前往首页「联系我们」获取详细方案。',
     boundary: {
       kicker: '边界',
-      heading: '授权边界',
+      heading: '交付边界',
+      lede: '先对齐范围，再进入商务报价——避免误解与无效沟通。',
+      next: '确认边界后，前往首页联系我们询价',
       cards: [
         {
           icon: 'package',
-          title: '授权对应什么',
+          title: '交付对应什么',
           variant: '',
           items: [
-            '软件授权、源码交付与技术支持边界',
+            '源码采购、完整交付与技术支持边界',
             '不是理财产品，不等于代管交易本金',
             '具体价格以沟通确认为准',
           ],
@@ -466,34 +612,6 @@ export const zh = {
         },
       ],
     },
-    prepare: {
-      kicker: '准备',
-      heading: '联系前请准备',
-      communicate: {
-        icon: 'chat',
-        title: '沟通时请说明',
-        items: [
-          '用途：自用 / 合法会员运营（须排除禁止用途）',
-          '期望交付：完整源码 · 是否需要代部署或定制',
-          '大致时间表与服务器环境（是否已有 Docker）',
-        ],
-      },
-      boundaries: {
-        icon: 'shield',
-        title: '沟通边界',
-        items: [
-          '只讨论软件授权与运营服务',
-          '不提供投资建议或收益承诺',
-          '明确违法用途将拒单',
-        ],
-      },
-    },
-    cta: {
-      title: '确认授权边界后',
-      highlight: '咨询价格',
-      suffix: '即可',
-      sub: '可先体验演示站；价格与交付细节以沟通确认为准。',
-    },
   },
   compliance: {
     title: '合规摘要',
@@ -510,9 +628,9 @@ export const zh = {
       prefix: '还可阅读：',
       faq: '常见问题',
       product: '产品能力',
-      contact: '价格与授权',
+      contact: '价格与交付',
     },
-    ctaSub: '仅讨论软件与运营服务；不提供投资建议，不承诺收益。了解边界后，欢迎咨询授权与交付。',
+    ctaSub: '仅讨论软件与运营服务；不提供投资建议，不承诺收益。了解边界后，欢迎咨询采购与交付。',
     tabs: {
       positioning: '产品定位',
       risk: '风险披露',
@@ -530,7 +648,7 @@ export const zh = {
       whatHeading: '我们是什么',
       notHeading: '我们不是什么',
       fundsHeading: '资金与密钥边界',
-      note: '向买家交付源码或部署包时，交付的是软件授权与技术交付，不是金融牌照，也不是可任意用于违法经营的许可。',
+      note: '向买家交付源码或部署包时，交付内容为完整源码与技术支持，不是金融牌照，也不是可任意用于违法经营的许可。',
       what: [
         '软件平台：提供策略配置、AI 决策辅助、交易员执行与运营后台等能力。',
         '支持托管运营模式：平台方可维护官方策略、订阅套餐、服务费记账，并在「用户自选 / 运营托管」间切换。',
@@ -573,17 +691,17 @@ export const zh = {
       heading: '禁止用途',
       lede:
         '任何使用、二开、转售或对外运营，不得用于下列用途。违反者自行承担全部法律与经济责任；卖方 / 运营方可终止支持并保留追偿与配合有权机关的权利。',
-      authHeading: '授权默认边界',
+      authHeading: '交付默认边界',
       items: [
         '诈骗与欺诈：虚构项目、杀猪盘、虚假客服、诱导转账等。',
         '虚假宣传与造假数据：伪造收益、资金证明、出入金记录、持仓或审计痕迹；宣称「保本保息、稳赚、官方担保」。',
         '非法金融活动：资金盘、非法集资、非法吸收公众存款、无资质从事须持牌业务等。',
         '仿冒与假冒：仿冒正规金融机构、交易所、政府或知名平台进行引流与收款。',
         '要求协助违法：要求提供诈骗话术、造假功能、规避监管、删除日志 / 审计等定制。',
-        '未授权扩散用于违法：未经书面授权转售完整源码，或提供给第三方用于上述用途。',
+        '擅自扩散用于违法：未经书面约定转售完整源码，或提供给第三方用于上述用途。',
       ],
       auth: [
-        '默认：单站点 / 单生产环境自用部署与合法二开；多站点、转授权、转售须另行书面约定。',
+        '默认：单站点 / 单生产环境自用部署与合法二开；多站点、转售、分发须另行书面约定。',
         '买方对外经营（宣传、收款、客服、税务、资质）由买方自行负责。',
       ],
     },
@@ -638,7 +756,7 @@ export const zh = {
       okHeading: '默认原则',
       noHeading: '不在退款范围的典型情况',
       ok: [
-        '数字化商品（源码、镜像包、授权类）一经提供下载 / 仓库访问 / 完整交付包，除约定缺陷外原则上不支持无理由退款。',
+        '数字化商品（源码、镜像包、交付类）一经提供下载 / 仓库访问 / 完整交付包，除约定缺陷外原则上不支持无理由退款。',
         '交付前：未发货且协商一致，可按渠道规则取消。',
         '缺陷：因卖方交付物无法按约定安装或存在重大功能缺失（非买家环境 / 二开导致），在约定售后期内可修复；无法修复时可协商部分或全额退款。',
         '因买家违反禁止用途被拒售或终止支持的，不构成卖方违约退款理由。',

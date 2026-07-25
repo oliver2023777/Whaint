@@ -13,6 +13,8 @@ export const en = {
     productNavAria: 'Product navigation',
     resourceNavAria: 'Resources & compliance',
     relatedPages: 'Related pages:',
+    home: 'Home',
+    breadcrumbAria: 'Breadcrumb',
   },
   nav: {
     product: 'Product',
@@ -25,10 +27,10 @@ export const en = {
     productNav: 'Product',
     resources: 'Resources & Compliance',
     contactUs: 'Contact Us',
-    barNote: 'Software license delivery · Pricing subject to consultation',
+    barNote: 'Source delivery · Pricing subject to consultation',
     tagline: 'Customer-facing AI quant custody platform (full source code)',
     complianceFootnote:
-      '鲸擎 · WhaleCore is a software license and operations system delivery. We do not handle user trading funds, provide investment advice, or promise returns. Buyers are responsible for their own operating compliance.',
+      '鲸擎 · WhaleCore is a source-code and operations system delivery. We do not handle user trading funds, provide investment advice, or promise returns. Buyers are responsible for their own operating compliance.',
     productLinks: [
       { href: '/product', label: 'Product' },
       { href: '/solutions', label: 'Operating Modes' },
@@ -46,8 +48,10 @@ export const en = {
     support:
       'Full source · One-click Docker deploy & upgrade · Strategy marketplace / plans / service fees / custody modes included. Built for platform operators—configure and go live out of the box.',
     console: {
-      chromeTitle: 'Update · maintain',
+      chromeTitle: 'whacore · update',
       liveBadge: 'EASY',
+      prompt: '~/whalecore',
+      command: './start.sh',
       tagline: 'Easy to maintain · One-command online updates · Data preserved',
       taglineHighlight: 'One-command',
       output: '✓ Pull latest package and upgrade · data/ preserved automatically',
@@ -151,7 +155,7 @@ export const en = {
       kicker: 'Monetize',
       heading: 'Multiple revenue paths, your',
       headingHighlight: 'business loop',
-      lede: 'Built-in operator monetization—combine plans, service fees, and premium unlocks from day one.',
+      lede: 'Built-in operator monetization—combine subscriptions, service fees, and entitlement upgrades from day one.',
       cards: [
         {
           icon: 'package',
@@ -165,8 +169,8 @@ export const en = {
         },
         {
           icon: 'key',
-          title: 'API & model markup',
-          desc: 'Built-in key quota resale and premium strategy unlocks for platform-side revenue.',
+          title: 'Entitlements & quota upgrades',
+          desc: 'Paid upgrades unlock more trader / exchange quotas and official-strategy access. End users still bring their own exchange and model keys.',
         },
       ],
     },
@@ -191,11 +195,70 @@ export const en = {
     define: {
       heading: 'Product definition & compliance boundaries',
     },
-    cta: {
-      title: 'Ready to launch your',
-      highlight: 'AI quant custody',
-      suffix: 'business?',
-      sub: 'One-time source delivery. No hidden fees. Self-hosted deployment. You own your data.',
+    terminal: {
+      kicker: 'Contact',
+      heading: 'Contact us',
+      lede: 'One-to-one inquiry: prepare the essentials below, then reach us via a channel.',
+      prepare: {
+        icon: 'chat',
+        title: 'Before we talk',
+        tip: 'Having these ready greatly speeds up the conversation and a tailored proposal.',
+        items: [
+          'Use case: internal / lawful membership ops (prohibited uses excluded)',
+          'Expected delivery: full source · managed deploy or customization?',
+          'Server environment: Docker ready? Target go-live timeline?',
+        ],
+        note: 'Source delivery and ops support only—no investment advice or return promises; illegal use cases will be declined.',
+      },
+      channels: {
+        icon: 'plane',
+        title: 'Get in touch',
+        lede: 'Prefer QQ or Telegram; or open the official demo first to explore the product.',
+      },
+    },
+  },
+  showcase: {
+    kicker: 'Product UI',
+    heading: 'Real product screens',
+    lede: 'Strategy marketplace, trading console, admin, and monetization modules ship ready—each screen below shows the delivered UI and what it is for.',
+    note: 'UI for illustration only. Sample returns and historical performance are not investment advice or return promises.',
+    items: {
+      console: {
+        title: 'Trading console',
+        desc: 'Equity, positions, and AI decision log in one view',
+      },
+      market: {
+        title: 'Strategy marketplace',
+        desc: 'Official strategies redacted for follow/copy trading',
+      },
+      admin: {
+        title: 'Admin console',
+        desc: 'Users, strategies, plans, payments, and audit logs',
+      },
+      strategy: {
+        title: 'Strategy settings',
+        desc: 'Indicators, risk controls, symbols, and intel',
+      },
+      'trader-board': {
+        title: 'Trader board',
+        desc: 'Multi-trader status and key metrics at a glance',
+      },
+      traders: {
+        title: 'Trader management',
+        desc: 'Cross-user view, start/stop, and strategy takeover',
+      },
+      billing: {
+        title: 'Plans & service fees',
+        desc: 'Subscriptions, fee ledger, and settlement',
+      },
+      intel: {
+        title: 'News & intel',
+        desc: 'News feeds wired into strategy decisions',
+      },
+      positions: {
+        title: 'Position history',
+        desc: 'Holdings and fills for auditability',
+      },
     },
   },
   product: {
@@ -206,12 +269,90 @@ export const en = {
     pageTitle: 'Product Capabilities',
     lede:
       '鲸擎 · WhaleCore full source delivery: a monetizable AI quant custody system for platform operators—configure strategy marketplace, traders, and plan tiers out of the box.',
+    highlightsHeading: 'What you get',
     highlights: [
       { icon: 'rocket', title: 'Ready to operate', desc: 'Strategy marketplace, traders, plans, service fees, admin console included' },
       { icon: 'code', title: 'Full source', desc: 'Editable frontend & backend—you set brand and domain' },
       { icon: 'toggle', title: 'Switchable modes', desc: 'Managed custody ↔ user self-service, one admin toggle' },
       { icon: 'container', title: 'Docker deploy', desc: 'Image packaging for go-live; upgrades preserve data' },
     ],
+    features: {
+      kicker: 'Product UI',
+      heading: 'Real product screens',
+      lede: 'Strategy marketplace, trading console, admin, and monetization modules ship ready—browse by module.',
+      note: 'UI for illustration only. Sample returns and historical performance are not investment advice or return promises.',
+      moreLink: 'See full product capabilities →',
+      navAria: 'Product module navigation',
+      modules: [
+        {
+          id: 'dashboard',
+          nav: 'Core dashboards',
+          tag: 'FEATURE 01',
+          title: 'Core dashboards',
+          desc: 'Equity, positions, trader board, and history in one place—operators and end users see status fast.',
+          features: [
+            'Trading console: equity, positions, and AI decision log',
+            'Trader board: multi-trader status and KPIs',
+            'Position history: audit-ready fills and holdings',
+            'LIVE-style boards for ops and demos',
+          ],
+          shots: [
+            { id: 'console', path: 'whacore.cn/console' },
+            { id: 'trader-board', path: 'whacore.cn/traders' },
+            { id: 'positions', path: 'whacore.cn/positions' },
+          ],
+        },
+        {
+          id: 'strategy',
+          nav: 'Strategies & plans',
+          tag: 'FEATURE 02',
+          title: 'Strategies & plan setup',
+          desc: 'Official strategy marketplace, strategy params, and subscription / service-fee monetization together.',
+          features: [
+            'Strategy marketplace: redacted display, one-click follow',
+            'Strategy settings: indicators, risk, symbols, intel',
+            'Plans & fees: quotas, accounting, settlement',
+            'Commercial rules editable for your pricing model',
+          ],
+          shots: [
+            { id: 'market', path: 'whacore.cn/market' },
+            { id: 'strategy', path: 'whacore.cn/strategy' },
+            { id: 'billing', path: 'whacore.cn/billing' },
+          ],
+        },
+        {
+          id: 'terminal',
+          nav: 'End-user experience',
+          tag: 'FEATURE 03',
+          title: 'End-user experience',
+          desc: 'Trader controls, strategy takeover, and intel for end users—lower setup friction, higher retention.',
+          features: [
+            'Trader management: inspect, start/stop, take over strategies',
+            'Intel & news: feeds to support strategy decisions',
+            'Users connect their own accounts and keys; funds stay self-custodied',
+            'Clear follow path for membership / copy-trading sites',
+          ],
+          shots: [
+            { id: 'traders', path: 'whacore.cn/traders' },
+            { id: 'intel', path: 'whacore.cn/intel' },
+          ],
+        },
+        {
+          id: 'admin',
+          nav: 'Ops admin',
+          tag: 'FEATURE 04',
+          title: 'Operations admin',
+          desc: 'Users, strategies, plans, payments, and logs in one console—switch managed ↔ self-service anytime.',
+          features: [
+            'Users, strategies, plans, payments, and logs in one place',
+            'Managed custody ↔ user self-service with one toggle',
+            'Trackable payments and service-fee ledgers',
+            'Full admin surface built for platform operators',
+          ],
+          shots: [{ id: 'admin', path: 'whacore.cn/admin' }],
+        },
+      ],
+    },
     capabilities: {
       kicker: 'Capabilities',
       heading: 'System capability checklist',
@@ -247,28 +388,40 @@ export const en = {
     },
     monetize: {
       kicker: 'Monetize',
-      heading: 'How operators can monetize',
+      heading: 'Diversified monetization',
       cards: [
         {
           icon: 'package',
           title: 'SaaS subscription plans',
-          desc: 'Charge monthly or annual strategy custody subscriptions—configure quotas and validity periods.',
+          items: [
+            'Monthly or annual strategy custody subscriptions',
+            'Configurable quotas and validity',
+            'Upgrade review and plan switching',
+          ],
         },
         {
           icon: 'chart',
           title: 'Revenue share / service fees',
-          desc: 'Configure execution fees and profit share flexibly; reconcile in admin.',
+          items: [
+            'Flexible execution fees and profit share',
+            'Admin reconciliation with trackable ledgers',
+            'Fits membership and copy-trading pricing models',
+          ],
         },
         {
           icon: 'key',
-          title: 'API & model markup',
-          desc: 'Built-in key quota resale and premium strategy unlocks for platform-side revenue.',
+          title: 'Entitlements & quota upgrades',
+          items: [
+            'Paid upgrades unlock more trader / exchange quotas',
+            'Tie official strategies to membership entitlements',
+            'End users still bring their own exchange and model keys',
+          ],
         },
       ],
       innerLinks: {
         prefix: 'Compare operating modes:',
         solutions: 'Operating Modes',
-        contact: 'Pricing & Licensing',
+        contact: 'Pricing & Delivery',
       },
     },
   },
@@ -378,7 +531,7 @@ export const en = {
     relatedLinks: {
       prefix: 'Related pages:',
       product: 'Product Capabilities',
-      contact: 'Pricing & Licensing',
+      contact: 'Pricing & Delivery',
       compliance: 'Compliance Summary',
     },
     items: [
@@ -410,36 +563,29 @@ export const en = {
       {
         question: 'How do I get pricing? Where is the demo?',
         answer:
-          'Contact us via QQ 613747777 or Telegram @whacore for licensing and delivery pricing. Official demo: https://whacore.cn. Specific terms are confirmed through consultation.',
+          'Contact us via QQ 613747777 or Telegram @whacore for purchase and delivery pricing. Official demo: https://whacore.cn. Specific terms are confirmed through consultation.',
       },
     ],
   },
   contact: {
-    title: 'Pricing & Licensing',
+    title: 'Pricing & Delivery',
     description:
-      '鲸擎 · WhaleCore source licensing and pricing: delivery scope, license boundaries, and contact via QQ / Telegram / demo site. Not an investment or yield product; pricing confirmed through consultation.',
+      '鲸擎 · WhaleCore source purchase and private inquiry: delivery boundaries. No public list price; proposals confirmed through one-to-one consultation.',
     kicker: 'Pricing',
-    pageTitle: 'Pricing & Licensing',
-    lede: 'Software license and source delivery—not an investment or yield product. Review delivery scope and license boundaries first, then confirm pricing and details via QQ / Telegram.',
-    channels: {
-      kicker: 'Channels',
-      heading: 'Contact us directly',
-      lede: 'Pick a channel below. QQ or Telegram is recommended; you can also open the demo site to explore the product first.',
-    },
-    deliver: {
-      kicker: 'Delivery',
-      heading: 'What is included',
-    },
+    pageTitle: 'Pricing & Delivery',
+    lede: 'Tailored commercial quotes based on your deployment needs and customization scope. Review delivery boundaries first, then inquire via Contact us on the homepage.',
     boundary: {
       kicker: 'Boundaries',
-      heading: 'License boundaries',
+      heading: 'Delivery boundaries',
+      lede: 'Align scope first—then commercial quoting. Fewer misunderstandings, faster proposals.',
+      next: 'After reviewing boundaries, contact us on the homepage to inquire',
       cards: [
         {
           icon: 'package',
-          title: 'What the license covers',
+          title: 'What delivery covers',
           variant: '',
           items: [
-            'Software license, source delivery, and support scope',
+            'Source purchase, full delivery, and support scope',
             'Not a wealth product; not custody of trading principal',
             'Pricing confirmed through consultation',
           ],
@@ -466,34 +612,6 @@ export const en = {
         },
       ],
     },
-    prepare: {
-      kicker: 'Prepare',
-      heading: 'Before you reach out',
-      communicate: {
-        icon: 'chat',
-        title: 'Please share',
-        items: [
-          'Use case: internal use / lawful membership ops (prohibited uses excluded)',
-          'Expected delivery: full source · managed deployment or customization needed?',
-          'Rough timeline and server environment (Docker already in place?)',
-        ],
-      },
-      boundaries: {
-        icon: 'shield',
-        title: 'Conversation boundaries',
-        items: [
-          'Software licensing and operations support only',
-          'No investment advice or return promises',
-          'Illegal use cases will be declined',
-        ],
-      },
-    },
-    cta: {
-      title: 'Once license boundaries are clear,',
-      highlight: 'request pricing',
-      suffix: 'anytime',
-      sub: 'Try the demo first; pricing and delivery details are confirmed through consultation.',
-    },
   },
   compliance: {
     title: 'Compliance Summary',
@@ -510,10 +628,10 @@ export const en = {
       prefix: 'Also read:',
       faq: 'FAQ',
       product: 'Product Capabilities',
-      contact: 'Pricing & Licensing',
+      contact: 'Pricing & Delivery',
     },
     ctaSub:
-      'Software and operations support only—no investment advice, no return promises. Once boundaries are clear, welcome to inquire about licensing and delivery.',
+      'Software and operations support only—no investment advice, no return promises. Once boundaries are clear, welcome to inquire about purchase and delivery.',
     tabs: {
       positioning: 'Positioning',
       risk: 'Risk Disclosure',
@@ -531,7 +649,7 @@ export const en = {
       whatHeading: 'What we are',
       notHeading: 'What we are not',
       fundsHeading: 'Funds & key boundaries',
-      note: 'Source or deployment packages are software licenses and technical delivery—not financial licenses or permission for unlawful operations.',
+      note: 'Source or deployment packages are full source and technical support—not financial licenses or permission for unlawful operations.',
       what: [
         'Software platform: strategy configuration, AI decision support, trader execution, and operations admin.',
         'Supports managed custody: operators maintain official strategies, subscription plans, and service-fee accounting; switch between user self-service and managed custody.',
@@ -574,14 +692,14 @@ export const en = {
       heading: 'Prohibited uses',
       lede:
         'Any use, customization, resale, or public operation must not serve the purposes below. Violators bear full legal and economic responsibility; the seller / operator may terminate support and pursue recovery or cooperate with authorities.',
-      authHeading: 'Default license boundaries',
+      authHeading: 'Default delivery boundaries',
       items: [
         'Fraud and scams: fake projects, pig-butchering, fake support, induce-to-transfer schemes, etc.',
         'False marketing and fake data: forged returns, proof of funds, deposit/withdraw records, positions, or audit trails; claims of “guaranteed principal, sure returns, official backing.”',
         'Illegal financial activity: Ponzi schemes, illegal fundraising, unlicensed regulated activities, etc.',
         'Impersonation: posing as regulated institutions, exchanges, governments, or well-known brands to attract and collect funds.',
         'Requests for unlawful assistance: scam scripts, fake-data features, regulatory evasion, log/audit deletion customization.',
-        'Unauthorized redistribution for unlawful use: reselling full source or supplying third parties for the above without written authorization.',
+        'Unpermitted redistribution for unlawful use: reselling full source or supplying third parties for the above without a written agreement.',
       ],
       auth: [
         'Default: single-site / single production deployment and lawful customization; multi-site, sublicensing, or resale requires separate written agreement.',

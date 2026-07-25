@@ -1,18 +1,18 @@
 ---
 import HomeHero from '../components/HomeHero.astro';
-import CtaLink from '../components/CtaLink.astro';
-import DefinitionBlock from '../components/DefinitionBlock.astro';
+import BizTerminal from '../components/BizTerminal.astro';
 import Icon from '../components/Icon.astro';
+import ProductShowcase from '../components/ProductShowcase.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getLocale, getMessages, localizePath } from '../i18n';
+import { getMessages } from '../i18n';
 
-const locale = getLocale(Astro.currentLocale);
-const t = getMessages(locale);
-const h = t.home;
+const h = getMessages(Astro.currentLocale).home;
 ---
 
 <BaseLayout title={h.title} description={h.description} path="/">
   <HomeHero />
+
+  <ProductShowcase />
 
   <section class="section section-split" aria-labelledby="trust-heading">
     <div class="wrap">
@@ -105,45 +105,5 @@ const h = t.home;
     </div>
   </section>
 
-  <section class="section section-split section-compact" aria-labelledby="modes-heading">
-    <div class="wrap">
-      <p class="section-kicker">{h.modes.kicker}</p>
-      <h2 id="modes-heading">{h.modes.heading}</h2>
-      <ul class="stack-list">
-        {
-          h.modes.items.map((item) => (
-            <li>
-              <span class="feature-icon feature-icon--sm" aria-hidden="true">
-                <Icon name={item.icon} size={18} />
-              </span>
-              <div>
-                <h3><a href={localizePath(item.href, locale)}>{item.title}</a></h3>
-                <p>{item.desc}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <section class="section section-quiet" aria-labelledby="define-heading">
-    <div class="wrap">
-      <h2 id="define-heading" class="section-quiet__title">{h.define.heading}</h2>
-      <DefinitionBlock panel />
-    </div>
-  </section>
-
-  <section class="bottom-cta" aria-labelledby="bottom-cta-heading">
-    <div class="wrap bottom-cta__inner">
-      <h2 id="bottom-cta-heading">
-        {h.cta.title} <span class="text-glow">{h.cta.highlight}</span> {h.cta.suffix}
-      </h2>
-      <p class="bottom-cta__sub">{h.cta.sub}</p>
-      <div class="cta-row bottom-cta__actions">
-        <CtaLink label={t.common.getDemo} variant="primary" />
-        <CtaLink label={t.common.consultPrice} variant="outline" href="/contact" />
-      </div>
-    </div>
-  </section>
+  <BizTerminal />
 </BaseLayout>

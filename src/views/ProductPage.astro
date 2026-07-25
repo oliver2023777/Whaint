@@ -2,6 +2,7 @@
 import Icon from '../components/Icon.astro';
 import PageCtaBand from '../components/PageCtaBand.astro';
 import PageHero from '../components/PageHero.astro';
+import ProductShowcase from '../components/ProductShowcase.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { getLocale, getMessages, localizePath } from '../i18n';
 
@@ -13,25 +14,9 @@ const p = t.product;
 <BaseLayout title={p.title} description={p.description} path="/product">
   <PageHero kicker={p.kicker} title={p.pageTitle} lede={p.lede} />
 
-  <section class="section section-split">
-    <div class="wrap">
-      <ul class="trust-grid">
-        {
-          p.highlights.map((item) => (
-            <li>
-              <span class="feature-icon" aria-hidden="true">
-                <Icon name={item.icon} size={22} />
-              </span>
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
+  <ProductShowcase />
 
-  <section class="section section-split">
+  <section class="section section-split product-capabilities">
     <div class="wrap">
       <p class="section-kicker">{p.capabilities.kicker}</p>
       <h2>{p.capabilities.heading}</h2>
@@ -43,7 +28,7 @@ const p = t.product;
                 <Icon name={card.icon} size={20} />
               </span>
               <h3 class="info-card__title">{card.title}</h3>
-              <ul class="info-list">
+              <ul class="info-list info-list--check">
                 {card.items.map((item) => (
                   <li>{item}</li>
                 ))}
@@ -55,23 +40,27 @@ const p = t.product;
     </div>
   </section>
 
-  <section class="section section-split">
+  <section class="section section-split product-monetize">
     <div class="wrap">
       <p class="section-kicker">{p.monetize.kicker}</p>
       <h2>{p.monetize.heading}</h2>
-      <ul class="trust-grid trust-grid--3" style="margin-top: 1.5rem">
+      <div class="info-grid info-grid--3" style="margin-top: 1.5rem">
         {
           p.monetize.cards.map((card) => (
-            <li>
+            <article class="info-card">
               <span class="feature-icon" aria-hidden="true">
                 <Icon name={card.icon} size={22} />
               </span>
-              <h3>{card.title}</h3>
-              <p>{card.desc}</p>
-            </li>
+              <h3 class="info-card__title">{card.title}</h3>
+              <ul class="info-list info-list--check">
+                {card.items.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </article>
           ))
         }
-      </ul>
+      </div>
       <p class="inner-links">
         {p.monetize.innerLinks.prefix}
         <a href={localizePath('/solutions', locale)}>{p.monetize.innerLinks.solutions}</a>

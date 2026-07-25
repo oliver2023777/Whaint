@@ -6,7 +6,7 @@ import { getLocale, getMessages, localizePath } from '../i18n';
 
 /**
  * 公开合规摘要：口径对齐本仓 compliance/
- * Tab 切换，锚点：#positioning #risk #prohibited #disclaimer #notice #privacy #refund #sales
+ * 全量展开 + 吸顶锚点：#positioning #risk #prohibited #disclaimer #notice #privacy #refund #sales
  */
 
 const locale = getLocale(Astro.currentLocale);
@@ -28,38 +28,28 @@ const navItems = [
 <BaseLayout title={c.title} description={c.description} path="/compliance">
   <PageHero kicker={c.kicker} title={c.pageTitle} lede={c.lede} />
 
+  <nav class="pill-sticky" data-compliance-sticky aria-label={c.tabsAria}>
+    <div class="wrap pill-nav">
+      {
+        navItems.map((item, i) => (
+          <a
+            class:list={['pill-nav__item', i === 0 && 'is-active']}
+            href={`#${item.id}`}
+            data-compliance-nav={item.id}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+
   <section class="section section-split compliance-page">
-    <div class="wrap compliance-page__wrap" data-compliance-tabs>
-      <div class="compliance-toolbar">
-        <nav class="compliance-nav" role="tablist" aria-label={c.tabsAria}>
-          {
-            navItems.map((item, i) => (
-              <button
-                type="button"
-                class="compliance-nav__btn"
-                role="tab"
-                id={`tab-${item.id}`}
-                aria-controls={`panel-${item.id}`}
-                aria-selected={i === 0 ? 'true' : 'false'}
-                tabindex={i === 0 ? 0 : -1}
-                data-tab={item.id}
-              >
-                {item.label}
-              </button>
-            ))
-          }
-        </nav>
-        <p class="compliance-source">{c.sourceNote}</p>
-      </div>
+    <div class="wrap compliance-page__wrap">
+      <p class="compliance-source">{c.sourceNote}</p>
 
       <div class="compliance-panels">
-        <article
-          id="panel-positioning"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-positioning"
-          data-panel="positioning"
-        >
+        <article id="positioning" class="compliance-block" data-compliance-section="positioning">
           <h2>{c.positioning.heading}</h2>
           <p class="compliance-callout">{c.positioning.callout}</p>
 
@@ -81,14 +71,7 @@ const navItems = [
           <p class="compliance-note">{c.positioning.note}</p>
         </article>
 
-        <article
-          id="panel-risk"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-risk"
-          data-panel="risk"
-          hidden
-        >
+        <article id="risk" class="compliance-block" data-compliance-section="risk">
           <h2>{c.risk.heading}</h2>
           <h3>{c.risk.tradeHeading}</h3>
           <ul class="compliance-list">
@@ -104,14 +87,7 @@ const navItems = [
           </ul>
         </article>
 
-        <article
-          id="panel-prohibited"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-prohibited"
-          data-panel="prohibited"
-          hidden
-        >
+        <article id="prohibited" class="compliance-block" data-compliance-section="prohibited">
           <h2>{c.prohibited.heading}</h2>
           <p class="compliance-lede">{c.prohibited.lede}</p>
           <ul class="compliance-list compliance-list--cross">
@@ -123,14 +99,7 @@ const navItems = [
           </ul>
         </article>
 
-        <article
-          id="panel-disclaimer"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-disclaimer"
-          data-panel="disclaimer"
-          hidden
-        >
+        <article id="disclaimer" class="compliance-block" data-compliance-section="disclaimer">
           <h2>{c.disclaimer.heading}</h2>
           <ol class="compliance-list compliance-list--ordered">
             {c.disclaimer.items.map((item) => <li>{item}</li>)}
@@ -138,14 +107,7 @@ const navItems = [
           <p class="compliance-callout compliance-callout--accent">{c.disclaimer.callout}</p>
         </article>
 
-        <article
-          id="panel-notice"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-notice"
-          data-panel="notice"
-          hidden
-        >
+        <article id="notice" class="compliance-block" data-compliance-section="notice">
           <h2>{c.notice.heading}</h2>
           <p class="compliance-lede">{c.notice.lede}</p>
           <h3>{c.notice.knowHeading}</h3>
@@ -159,14 +121,7 @@ const navItems = [
           <p class="compliance-note">{c.notice.note}</p>
         </article>
 
-        <article
-          id="panel-privacy"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-privacy"
-          data-panel="privacy"
-          hidden
-        >
+        <article id="privacy" class="compliance-block" data-compliance-section="privacy">
           <h2>{c.privacy.heading}</h2>
           <ul class="compliance-list">
             {c.privacy.items.map((item) => <li>{item}</li>)}
@@ -174,14 +129,7 @@ const navItems = [
           <p class="compliance-note">{c.privacy.note}</p>
         </article>
 
-        <article
-          id="panel-refund"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-refund"
-          data-panel="refund"
-          hidden
-        >
+        <article id="refund" class="compliance-block" data-compliance-section="refund">
           <h2>{c.refund.heading}</h2>
           <p class="compliance-lede">{c.refund.lede}</p>
           <h3>{c.refund.okHeading}</h3>
@@ -194,14 +142,7 @@ const navItems = [
           </ul>
         </article>
 
-        <article
-          id="panel-sales"
-          class="compliance-block"
-          role="tabpanel"
-          aria-labelledby="tab-sales"
-          data-panel="sales"
-          hidden
-        >
+        <article id="sales" class="compliance-block" data-compliance-section="sales">
           <h2>{c.sales.heading}</h2>
           <ul class="compliance-list">
             {c.sales.items.map((item) => <li>{item}</li>)}
@@ -224,48 +165,8 @@ const navItems = [
 </BaseLayout>
 
 <style is:global>
-  .compliance-toolbar {
-    margin: 0 0 1rem;
-  }
-
-  .compliance-nav {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin: 0 0 0.65rem;
-  }
-
-  .compliance-nav__btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.75rem;
-    border-radius: 0.45rem;
-    border: 1px solid var(--color-line-strong);
-    background: rgba(255, 255, 255, 0.03);
-    color: var(--color-muted);
-    font-family: var(--font-body);
-    font-size: 0.8125rem;
-    font-weight: 550;
-    cursor: pointer;
-    transition:
-      color 160ms var(--ease-out),
-      border-color 160ms var(--ease-out),
-      background-color 160ms var(--ease-out);
-  }
-
-  .compliance-nav__btn:hover {
-    color: var(--color-brand);
-    border-color: var(--color-brand-border);
-  }
-
-  .compliance-nav__btn[aria-selected="true"] {
-    color: var(--color-on-brand);
-    border-color: rgba(240, 185, 11, 0.55);
-    background: var(--color-brand);
-  }
-
   .compliance-source {
-    margin: 0;
+    margin: 0 0 1.25rem;
     color: #71717a;
     font-size: 0.75rem;
     line-height: 1.5;
@@ -278,7 +179,8 @@ const navItems = [
   }
 
   .compliance-panels {
-    min-height: 18rem;
+    display: grid;
+    gap: 1.15rem;
   }
 
   .compliance-block {
@@ -290,6 +192,7 @@ const navItems = [
     border: 1px solid var(--card-border);
     border-radius: var(--radius);
     background: var(--card-bg);
+    scroll-margin-top: calc(var(--header-h) + 3.75rem);
   }
 
   .compliance-block::before {
@@ -300,10 +203,6 @@ const navItems = [
     height: 1px;
     background: linear-gradient(90deg, transparent, rgba(234, 179, 8, 0.2), transparent);
     pointer-events: none;
-  }
-
-  .compliance-block[hidden] {
-    display: none;
   }
 
   .compliance-block h2 {
@@ -399,7 +298,7 @@ const navItems = [
   }
 
   .compliance-list--cross > li::before {
-    content: "";
+    content: '';
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23f87171'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M6 18L18 6M6 6l12 12'/%3E%3C/svg%3E");
     color: transparent;
     font-size: 0;
@@ -419,7 +318,7 @@ const navItems = [
   }
 
   .compliance-list--ordered > li::before {
-    content: counter(compliance-ol) ".";
+    content: counter(compliance-ol) '.';
     flex: 0 0 1.35rem;
     width: auto;
     height: auto;
@@ -434,59 +333,54 @@ const navItems = [
   }
 
   .compliance-page .inner-links {
-    margin: 1.25rem 0 0;
+    margin: 1.5rem 0 0;
     font-size: 0.875rem;
     color: #71717a;
   }
 </style>
 
 <script>
-  const root = document.querySelector('[data-compliance-tabs]');
-  if (root) {
-    const tabs = Array.from(root.querySelectorAll('[data-tab]'));
-    const panels = Array.from(root.querySelectorAll('[data-panel]'));
-    const ids = tabs.map((t) => t.getAttribute('data-tab')).filter(Boolean);
+  const sticky = document.querySelector('[data-compliance-sticky]');
+  if (sticky) {
+    const links = Array.from(sticky.querySelectorAll('[data-compliance-nav]'));
+    const sections = Array.from(document.querySelectorAll('[data-compliance-section]'));
 
-    function activate(id, pushHash = true) {
-      const next = ids.includes(id) ? id : 'positioning';
-      for (const tab of tabs) {
-        const on = tab.getAttribute('data-tab') === next;
-        tab.setAttribute('aria-selected', on ? 'true' : 'false');
-        tab.tabIndex = on ? 0 : -1;
-      }
-      for (const panel of panels) {
-        panel.hidden = panel.getAttribute('data-panel') !== next;
-      }
-      if (pushHash) {
-        const url = new URL(window.location.href);
-        url.hash = next;
-        history.replaceState(null, '', url);
-      }
-    }
+    const setActive = (id) => {
+      links.forEach((link) => {
+        link.classList.toggle('is-active', link.getAttribute('data-compliance-nav') === id);
+      });
+    };
 
-    for (const tab of tabs) {
-      tab.addEventListener('click', () => activate(tab.getAttribute('data-tab') || 'positioning'));
-    }
+    if (sections[0]) setActive(sections[0].getAttribute('data-compliance-section') || '');
 
-    const nav = root.querySelector('.compliance-nav');
-    nav?.addEventListener('keydown', (e) => {
-      const current = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
-      if (current < 0) return;
-      let next = current;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (current + 1) % tabs.length;
-      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
-        next = (current - 1 + tabs.length) % tabs.length;
-      else if (e.key === 'Home') next = 0;
-      else if (e.key === 'End') next = tabs.length - 1;
-      else return;
-      e.preventDefault();
-      tabs[next]?.focus();
-      activate(tabs[next].getAttribute('data-tab') || 'positioning');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0]?.target;
+        if (top instanceof HTMLElement) {
+          setActive(top.getAttribute('data-compliance-section') || '');
+        }
+      },
+      {
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0.1, 0.25, 0.5],
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        const id = link.getAttribute('data-compliance-nav');
+        if (id) setActive(id);
+      });
     });
 
     const fromHash = () => {
       const id = window.location.hash.replace(/^#/, '');
-      activate(id || 'positioning', false);
+      if (id) setActive(id);
     };
     fromHash();
     window.addEventListener('hashchange', fromHash);

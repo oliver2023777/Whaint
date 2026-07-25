@@ -1,18 +1,296 @@
 ---
+import { getLocale, getMessages, localizePath, stripLocale } from '../i18n';
+
 interface Props {
   kicker: string;
   title: string;
   lede?: string;
+  /** panel：Mac 窗口；plain：无外框（商务页） */
+  variant?: 'panel' | 'plain';
 }
 
-const { kicker, title, lede } = Astro.props;
+const { kicker, title, lede, variant = 'panel' } = Astro.props;
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+
+const bare = stripLocale(Astro.url.pathname);
+const segments = bare === '/' ? [] : bare.split('/').filter(Boolean);
+
+const pathLabel: Record<string, string> = {
+  product: t.nav.product,
+  solutions: t.nav.solutions,
+  contact: t.nav.contact,
+  faq: t.nav.faq,
+  compliance: t.nav.compliance,
+  pricing: t.nav.contact,
+  managed: locale === 'en' ? 'Managed' : '运营托管',
+  self: locale === 'en' ? 'Self-service' : '用户自选',
+};
+
+const crumbs: Array<{ href: string; label: string; current?: boolean }> = [
+  { href: localizePath('/', locale), label: t.common.home },
+];
+
+let walk = '';
+segments.forEach((seg, i) => {
+  walk += `/${seg}`;
+  const last = i === segments.length - 1;
+  crumbs.push({
+    href: localizePath(walk, locale),
+    label: last ? title : pathLabel[seg] || seg,
+    current: last,
+  });
+});
 ---
 
-<section class="page-hero">
+<section class="page-hero" aria-labelledby="page-hero-title">
+  <div class="page-hero__glow" aria-hidden="true"></div>
   <div class="wrap page-hero__inner">
-    <p class="section-kicker">{kicker}</p>
-    <h1>{title}</h1>
-    {lede && <p class="lede page-hero__lede">{lede}</p>}
-    <slot />
+    <nav class="page-hero__crumbs" aria-label={t.common.breadcrumbAria}>
+      <ol>
+        {
+          crumbs.map((crumb) => (
+            <li>
+              {crumb.current ? (
+                <span aria-current="page">{crumb.label}</span>
+              ) : (
+                <a href={crumb.href}>{crumb.label}</a>
+              )}
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+
+    {
+      variant === 'plain' ? (
+        <div class="page-hero__plain">
+          <p class="page-hero__kicker page-hero__kicker--tag">{kicker}</p>
+          <h1 id="page-hero-title" class="page-hero__title page-hero__title--plain">{title}</h1>
+          {lede && <p class="page-hero__lede page-hero__lede--plain">{lede}</p>}
+          <slot />
+        </div>
+      ) : (
+        <div class="page-hero__panel">
+          <div class="page-hero__chrome" aria-hidden="true">
+            <span class="page-hero__dot page-hero__dot--r"></span>
+            <span class="page-hero__dot page-hero__dot--y"></span>
+            <span class="page-hero__dot page-hero__dot--g"></span>
+            <span class="page-hero__path">{kicker}</span>
+          </div>
+          <div class="page-hero__body">
+            <p class="page-hero__kicker">{kicker}</p>
+            <h1 id="page-hero-title" class="page-hero__title">{title}</h1>
+            {lede && <p class="page-hero__lede">{lede}</p>}
+            <slot />
+          </div>
+        </div>
+      )
+    }
   </div>
 </section>
+
+<style>
+  .page-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: clip;
+    padding: clamp(2rem, 5vw, 3.25rem) 0 clamp(1.75rem, 4vw, 2.75rem);
+    border-bottom: 1px solid var(--color-line);
+    background:
+      radial-gradient(90% 80% at 8% -10%, rgba(240, 185, 11, 0.14), transparent 55%),
+      radial-gradient(70% 60% at 92% 10%, rgba(240, 185, 11, 0.06), transparent 50%),
+      var(--color-bg);
+  }
+
+  .page-hero__glow {
+    position: absolute;
+    inset: -20% 20% auto -10%;
+    height: 70%;
+    background: radial-gradient(ellipse 70% 60% at 20% 0%, rgba(234, 179, 8, 0.1), transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-hero__inner {
+    position: relative;
+    z-index: 1;
+    max-width: 46rem;
+  }
+
+  .page-hero:has(.page-hero__plain) .page-hero__inner {
+    max-width: 42rem;
+  }
+
+  .page-hero__plain {
+    padding: 0.15rem 0 0.25rem;
+  }
+
+  .page-hero__kicker--tag {
+    margin-bottom: 0.85rem;
+    letter-spacing: 0.12em;
+  }
+
+  .page-hero__title--plain {
+    font-size: clamp(1.75rem, 4.2vw, 2.35rem);
+    letter-spacing: -0.035em;
+    line-height: 1.18;
+  }
+
+  .page-hero__lede--plain {
+    margin-top: 0.85rem;
+    max-width: 36rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-ink-soft);
+  }
+
+  .page-hero__plain :global(.hero-anchors) {
+    margin-top: 1.35rem;
+  }
+
+  .page-hero__crumbs {
+    margin: 0 0 0.85rem;
+  }
+
+  .page-hero__crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.15rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.02em;
+    color: var(--color-muted);
+  }
+
+  .page-hero__crumbs li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    min-width: 0;
+  }
+
+  .page-hero__crumbs li:not(:last-child)::after {
+    content: '/';
+    margin-left: 0.35rem;
+    color: rgba(244, 245, 247, 0.28);
+  }
+
+  .page-hero__crumbs a {
+    color: var(--color-ink-soft);
+    text-decoration: none;
+  }
+
+  .page-hero__crumbs a:hover {
+    color: var(--color-brand);
+  }
+
+  .page-hero__crumbs [aria-current='page'] {
+    color: var(--color-muted);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 16rem;
+  }
+
+  .page-hero__panel {
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.85rem;
+    background: #080a0e;
+    box-shadow:
+      0 18px 40px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+
+  .page-hero__chrome {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.28);
+  }
+
+  .page-hero__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+  }
+
+  .page-hero__dot--r {
+    background: #ff5f57;
+  }
+  .page-hero__dot--y {
+    background: #febc2e;
+  }
+  .page-hero__dot--g {
+    background: #28c840;
+  }
+
+  .page-hero__path {
+    margin-left: 0.45rem;
+    min-width: 0;
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .page-hero__body {
+    padding: 1.05rem 1.1rem 1.2rem;
+  }
+
+  .page-hero__kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0 0 0.65rem;
+    padding: 0.28rem 0.65rem;
+    border: 1px solid var(--color-line-strong);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.03);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-ink-soft);
+  }
+
+  .page-hero__kicker::before {
+    content: '';
+    width: 0.3rem;
+    height: 0.3rem;
+    border-radius: 50%;
+    background: var(--color-brand);
+    box-shadow: 0 0 8px rgba(240, 185, 11, 0.55);
+  }
+
+  .page-hero__title {
+    margin: 0;
+    font-size: clamp(1.35rem, 2.8vw, 1.65rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.25;
+    color: var(--color-ink);
+  }
+
+  .page-hero__lede {
+    margin: 0.65rem 0 0;
+    max-width: 38rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-ink-soft);
+  }
+
+  .page-hero__body :global(.cta-row) {
+    margin-top: 1.1rem;
+  }
+</style>

@@ -211,33 +211,6 @@ p:last-child {
   margin-top: 1.75rem;
 }
 
-.page-hero {
-  padding: clamp(3.5rem, 10vw, 6rem) 0 clamp(2.5rem, 6vw, 4rem);
-  border-bottom: 1px solid var(--color-line);
-  background:
-    radial-gradient(70% 55% at 0% 0%, rgba(240, 185, 11, 0.1), transparent 55%),
-    var(--color-bg);
-}
-
-.page-hero__inner {
-  max-width: 46rem;
-}
-
-.page-hero h1 {
-  margin: 0;
-  font-size: clamp(1.85rem, 4vw, 2.45rem);
-  letter-spacing: -0.035em;
-  line-height: 1.15;
-}
-
-.page-hero__lede {
-  margin: 1rem 0 0;
-  max-width: 40rem;
-  font-size: 0.95rem;
-  line-height: 1.65;
-  color: #a1a1aa;
-}
-
 .doc-panel {
   position: relative;
   isolation: isolate;
@@ -331,35 +304,78 @@ p:last-child {
   text-decoration: underline;
 }
 
-.mode-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
-  margin-top: 1.35rem;
+/* 统一胶囊导航：产品实景吸顶 / 合规 tabs / 运营模式切换 */
+.pill-sticky {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 30;
+  border-bottom: 1px solid rgba(39, 39, 42, 0.95);
+  background: rgba(5, 6, 8, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
-.mode-pill {
+.pill-sticky .wrap,
+.pill-sticky__inner {
+  padding-block: 0.7rem;
+}
+
+.pill-nav {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pill-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.pill-nav--wrap {
+  flex-wrap: wrap;
+  overflow: visible;
+}
+
+.pill-nav__item {
+  flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
+  margin: 0;
   padding: 0.45rem 0.85rem;
+  border: 1px solid transparent;
   border-radius: 999px;
-  border: 1px solid var(--color-line);
-  background: rgba(255, 255, 255, 0.03);
+  background: transparent;
   color: var(--color-ink-soft);
-  font-size: 0.82rem;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
   text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 160ms var(--ease-out),
+    border-color 160ms var(--ease-out),
+    background-color 160ms var(--ease-out);
 }
 
-.mode-pill:hover {
-  border-color: rgba(240, 185, 11, 0.35);
-  color: var(--color-ink);
-}
-
-.mode-pill--on {
-  border-color: rgba(240, 185, 11, 0.4);
-  background: rgba(240, 185, 11, 0.1);
+.pill-nav__item:hover,
+.pill-nav__item:focus-visible {
   color: var(--color-brand);
+  border-color: rgba(240, 185, 11, 0.28);
+  background: rgba(240, 185, 11, 0.08);
+  outline: none;
+}
+
+.pill-nav__item.is-active,
+.pill-nav__item[aria-selected='true'],
+.pill-nav__item.mode-pill--on {
+  color: var(--color-brand);
+  border-color: rgba(240, 185, 11, 0.4);
+  background: rgba(240, 185, 11, 0.12);
 }
 
 .section {
@@ -473,12 +489,13 @@ p:last-child {
   margin: 1.75rem 0 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 0.75rem;
 }
 
 @media (min-width: 720px) {
   .stack-list {
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.1rem;
   }
 }

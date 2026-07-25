@@ -13,38 +13,28 @@ const s = t.solutions;
 <BaseLayout title={s.title} description={s.description} path="/solutions">
   <PageHero kicker={s.kicker} title={s.pageTitle} lede={s.lede} />
 
-  <section class="section section-split">
-    <div class="wrap" data-mode-tabs>
-      <div class="mode-pills" role="tablist" aria-label={s.tabsAria}>
-        {
-          s.modes.map((mode, i) => (
-            <button
-              type="button"
-              class:list={['mode-pill', i === 0 && 'mode-pill--on']}
-              role="tab"
-              id={`tab-${mode.id}`}
-              aria-controls={`panel-${mode.id}`}
-              aria-selected={i === 0 ? 'true' : 'false'}
-              tabindex={i === 0 ? 0 : -1}
-              data-mode-tab={mode.id}
-            >
-              <Icon name={mode.icon} size={14} />
-              {mode.label}
-            </button>
-          ))
-        }
-      </div>
-
+  <nav class="pill-sticky" data-solutions-sticky aria-label={s.tabsAria}>
+    <div class="wrap pill-nav">
       {
         s.modes.map((mode, i) => (
-          <div
-            id={`panel-${mode.id}`}
-            class="mode-panel"
-            role="tabpanel"
-            aria-labelledby={`tab-${mode.id}`}
-            data-mode-panel={mode.id}
-            hidden={i !== 0}
+          <a
+            class:list={['pill-nav__item', i === 0 && 'is-active']}
+            href={`#${mode.id}`}
+            data-solutions-nav={mode.id}
           >
+            <Icon name={mode.icon} size={14} />
+            {mode.label}
+          </a>
+        ))
+      }
+    </div>
+  </nav>
+
+  <section class="section section-split">
+    <div class="wrap solutions-stack">
+      {
+        s.modes.map((mode) => (
+          <div id={mode.id} class="mode-panel" data-solutions-section={mode.id}>
             <div class="mode-panel__intro">
               <h2>{mode.title}</h2>
               <p>{mode.lede}</p>
@@ -71,29 +61,17 @@ const s = t.solutions;
     </div>
   </section>
 
-  <div data-mode-cta>
-    {
-      s.modes.map((mode, i) => (
-        <div data-mode-cta-panel={mode.id} hidden={i !== 0}>
-          <PageCtaBand
-            title={mode.ctaTitle}
-            highlight={mode.ctaHighlight}
-            suffix={mode.ctaSuffix}
-            sub={mode.ctaSub}
-          />
-        </div>
-      ))
-    }
-  </div>
+  <PageCtaBand />
 </BaseLayout>
 
-<style is:global>
-  .mode-panel {
-    margin-top: 1.5rem;
+<style>
+  .solutions-stack {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 4rem);
   }
 
-  .mode-panel[hidden] {
-    display: none;
+  .mode-panel {
+    scroll-margin-top: calc(var(--header-h) + 3.75rem);
   }
 
   .mode-panel__intro {
@@ -112,71 +90,50 @@ const s = t.solutions;
     font-size: 0.9375rem;
     line-height: 1.65;
   }
-
-  .mode-pills button.mode-pill {
-    cursor: pointer;
-    font: inherit;
-  }
-
-  [data-mode-cta-panel][hidden] {
-    display: none;
-  }
 </style>
 
 <script>
-  const root = document.querySelector('[data-mode-tabs]');
-  const ctaRoot = document.querySelector('[data-mode-cta]');
-  if (root) {
-    const tabs = Array.from(root.querySelectorAll('[data-mode-tab]'));
-    const panels = Array.from(root.querySelectorAll('[data-mode-panel]'));
-    const ctaPanels = ctaRoot
-      ? Array.from(ctaRoot.querySelectorAll('[data-mode-cta-panel]'))
-      : [];
-    const ids = tabs.map((t) => t.getAttribute('data-mode-tab')).filter(Boolean);
+  const sticky = document.querySelector('[data-solutions-sticky]');
+  if (sticky) {
+    const links = Array.from(sticky.querySelectorAll('[data-solutions-nav]'));
+    const sections = Array.from(document.querySelectorAll('[data-solutions-section]'));
 
-    function activate(id, pushHash = true) {
-      const next = ids.includes(id) ? id : 'managed';
-      for (const tab of tabs) {
-        const on = tab.getAttribute('data-mode-tab') === next;
-        tab.setAttribute('aria-selected', on ? 'true' : 'false');
-        tab.tabIndex = on ? 0 : -1;
-        tab.classList.toggle('mode-pill--on', on);
-      }
-      for (const panel of panels) {
-        panel.hidden = panel.getAttribute('data-mode-panel') !== next;
-      }
-      for (const panel of ctaPanels) {
-        panel.hidden = panel.getAttribute('data-mode-cta-panel') !== next;
-      }
-      if (pushHash) {
-        const url = new URL(window.location.href);
-        url.hash = next;
-        history.replaceState(null, '', url);
-      }
-    }
+    const setActive = (id) => {
+      links.forEach((link) => {
+        link.classList.toggle('is-active', link.getAttribute('data-solutions-nav') === id);
+      });
+    };
 
-    for (const tab of tabs) {
-      tab.addEventListener('click', () => activate(tab.getAttribute('data-mode-tab') || 'managed'));
-    }
+    if (sections[0]) setActive(sections[0].getAttribute('data-solutions-section') || '');
 
-    root.querySelector('.mode-pills')?.addEventListener('keydown', (e) => {
-      const current = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
-      if (current < 0) return;
-      let next = current;
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (current + 1) % tabs.length;
-      else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp')
-        next = (current - 1 + tabs.length) % tabs.length;
-      else if (e.key === 'Home') next = 0;
-      else if (e.key === 'End') next = tabs.length - 1;
-      else return;
-      e.preventDefault();
-      tabs[next]?.focus();
-      activate(tabs[next].getAttribute('data-mode-tab') || 'managed');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0]?.target;
+        if (top instanceof HTMLElement) {
+          setActive(top.getAttribute('data-solutions-section') || '');
+        }
+      },
+      {
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0.1, 0.25, 0.5],
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        const id = link.getAttribute('data-solutions-nav');
+        if (id) setActive(id);
+      });
     });
 
     const fromHash = () => {
       const id = window.location.hash.replace(/^#/, '');
-      activate(id || 'managed', false);
+      if (id) setActive(id);
     };
     fromHash();
     window.addEventListener('hashchange', fromHash);

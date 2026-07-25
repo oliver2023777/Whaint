@@ -18,6 +18,7 @@ const pathname = Astro.url.pathname;
           hreflang={code === 'zh' ? 'zh-CN' : 'en'}
           aria-current={current ? 'true' : undefined}
           data-locale-switch={code}
+          onclick={`try{localStorage.setItem('whaint-locale','${code}')}catch(e){}`}
         >
           {localeLabels[code]}
         </a>
@@ -51,6 +52,7 @@ const pathname = Astro.url.pathname;
     font-weight: 650;
     letter-spacing: 0.02em;
     line-height: 1;
+    cursor: pointer;
   }
 
   .lang-switcher__btn:hover {
@@ -62,18 +64,3 @@ const pathname = Astro.url.pathname;
     color: var(--color-brand);
   }
 </style>
-
-<script>
-  document.querySelectorAll('[data-locale-switch]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const code = el.getAttribute('data-locale-switch');
-      if (code === 'zh' || code === 'en') {
-        try {
-          localStorage.setItem('whaint-locale', code);
-        } catch {
-          /* ignore */
-        }
-      }
-    });
-  });
-</script>

@@ -1,10 +1,8 @@
 ---
-import ContactChannels from '../components/ContactChannels.astro';
-import Icon from '../components/Icon.astro';
-import PageCtaBand from '../components/PageCtaBand.astro';
 import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { getLocale, getMessages } from '../i18n';
+import { getLocale, getMessages, localizePath } from '../i18n';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getMessages(locale);
@@ -14,41 +12,11 @@ const c = t.contact;
 <BaseLayout title={c.title} description={c.description} path="/contact">
   <PageHero kicker={c.kicker} title={c.pageTitle} lede={c.lede} />
 
-  <section class="section section-split">
-    <div class="wrap">
-      <div class="contact-block contact-block--top">
-        <p class="section-kicker">{c.channels.kicker}</p>
-        <h2>{c.channels.heading}</h2>
-        <p class="contact-block__lede">{c.channels.lede}</p>
-        <ContactChannels variant="card" />
-      </div>
-    </div>
-  </section>
-
-  <section class="section section-split">
-    <div class="wrap">
-      <p class="section-kicker">{c.deliver.kicker}</p>
-      <h2>{c.deliver.heading}</h2>
-      <ul class="trust-grid trust-grid--deliver">
-        {
-          t.home.deliver.items.map((item) => (
-            <li>
-              <span class="feature-icon" aria-hidden="true">
-                <Icon name={item.icon} size={22} />
-              </span>
-              <h3>{item.title}</h3>
-              <p>{item.desc}</p>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
-
-  <section class="section section-split">
+  <section class="section section-split section-compact" id="boundary">
     <div class="wrap">
       <p class="section-kicker">{c.boundary.kicker}</p>
       <h2>{c.boundary.heading}</h2>
+      {c.boundary.lede && <p class="section-lede">{c.boundary.lede}</p>}
       <div class="info-grid info-grid--3" style="margin-top: 1.5rem">
         {
           c.boundary.cards.map((card) => (
@@ -66,59 +34,46 @@ const c = t.contact;
           ))
         }
       </div>
+      <p class="boundary-next">
+        <a href={localizePath('/#biz', locale)}>{c.boundary.next}</a>
+      </p>
     </div>
   </section>
-
-  <section class="section section-split">
-    <div class="wrap">
-      <p class="section-kicker">{c.prepare.kicker}</p>
-      <h2>{c.prepare.heading}</h2>
-      <div class="info-grid info-grid--2" style="margin-top: 1.5rem">
-        <article class="info-card">
-          <span class="feature-icon" aria-hidden="true">
-            <Icon name={c.prepare.communicate.icon} size={20} />
-          </span>
-          <h2 class="info-card__title">{c.prepare.communicate.title}</h2>
-          <ul class="info-list">
-            {c.prepare.communicate.items.map((item) => <li>{item}</li>)}
-          </ul>
-        </article>
-        <article class="info-card">
-          <span class="feature-icon" aria-hidden="true">
-            <Icon name={c.prepare.boundaries.icon} size={20} />
-          </span>
-          <h2 class="info-card__title">{c.prepare.boundaries.title}</h2>
-          <ul class="info-list">
-            {c.prepare.boundaries.items.map((item) => <li>{item}</li>)}
-          </ul>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <PageCtaBand
-    title={c.cta.title}
-    highlight={c.cta.highlight}
-    suffix={c.cta.suffix}
-    sub={c.cta.sub}
-  />
 </BaseLayout>
 
 <style>
-  .contact-block--top {
-    margin-top: 0;
+  #boundary {
+    scroll-margin-top: calc(var(--header-h) + 1rem);
   }
 
-  .contact-block h2 {
-    margin: 0 0 0.45rem;
-    font-size: 1.125rem;
-  }
-
-  .contact-block__lede {
-    margin: 0;
-    max-width: 36rem;
+  .section-lede {
+    margin: 0.45rem 0 0;
+    max-width: 40rem;
     color: #a1a1aa;
-    font-size: 0.875rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .boundary-next {
+    margin: 1.75rem 0 0;
+  }
+
+  .boundary-next a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--color-brand);
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .boundary-next a::after {
+    content: '→';
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .boundary-next a:hover::after {
+    transform: translateX(3px);
   }
 </style>

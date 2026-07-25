@@ -1,0 +1,81 @@
+---
+import ContactChannels from './ContactChannels.astro';
+import Icon from './Icon.astro';
+import { getLocale, getMessages } from '../i18n';
+
+const locale = getLocale(Astro.currentLocale);
+const term = getMessages(locale).home.terminal;
+---
+
+<section class="section section-split section-compact" id="biz" aria-labelledby="biz-heading">
+  <div class="wrap">
+    <p class="section-kicker">{term.kicker}</p>
+    <h2 id="biz-heading">{term.heading}</h2>
+    <p class="biz-terminal__lede">{term.lede}</p>
+
+    <div class="biz-terminal">
+      <article class="info-card biz-terminal__card">
+        <span class="feature-icon" aria-hidden="true">
+          <Icon name={term.prepare.icon} size={20} />
+        </span>
+        <h3 class="info-card__title">{term.prepare.title}</h3>
+        <p class="info-card__lede">{term.prepare.tip}</p>
+        <ul class="info-list">
+          {term.prepare.items.map((item) => <li>{item}</li>)}
+        </ul>
+        <p class="biz-terminal__note">{term.prepare.note}</p>
+      </article>
+
+      <article class="info-card biz-terminal__card">
+        <span class="feature-icon" aria-hidden="true">
+          <Icon name={term.channels.icon} size={20} />
+        </span>
+        <h3 class="info-card__title">{term.channels.title}</h3>
+        <p class="info-card__lede">{term.channels.lede}</p>
+        <ContactChannels variant="stack" />
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  #biz {
+    scroll-margin-top: calc(var(--header-h) + 1rem);
+  }
+
+  .biz-terminal__lede {
+    margin: 0.45rem 0 0;
+    max-width: 40rem;
+    color: #a1a1aa;
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+
+  .biz-terminal {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: 1.5rem;
+    align-items: stretch;
+  }
+
+  @media (min-width: 1024px) {
+    .biz-terminal {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2rem;
+    }
+  }
+
+  .biz-terminal__card {
+    height: 100%;
+  }
+
+  .biz-terminal__note {
+    margin: 1.1rem 0 0;
+    padding-top: 0.95rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--color-muted);
+  }
+</style>
