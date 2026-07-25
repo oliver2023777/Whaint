@@ -50,7 +50,7 @@ export const zh = {
     console: {
       chromeTitle: 'whacore · update',
       liveBadge: 'EASY',
-      prompt: '~/whalecore',
+      prompt: '',
       command: './start.sh',
       tagline: '小白也能维护 · 一行命令在线更新 · 数据不丢',
       taglineHighlight: '一行命令',

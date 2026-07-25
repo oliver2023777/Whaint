@@ -50,7 +50,7 @@ export const en = {
     console: {
       chromeTitle: 'whacore · update',
       liveBadge: 'EASY',
-      prompt: '~/whalecore',
+      prompt: '',
       command: './start.sh',
       tagline: 'Easy to maintain · One-command online updates · Data preserved',
       taglineHighlight: 'One-command',

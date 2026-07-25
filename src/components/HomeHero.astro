@@ -92,7 +92,7 @@ const taglineParts = renderTagline(c.tagline, c.taglineHighlight);
             )
           }
         </p>
-        <pre class="hero-terminal__code"><code><span class="hero-terminal__prompt">{c.prompt}</span> <span class="hero-terminal__cmd">{c.command}</span><span class="hero-terminal__cursor" aria-hidden="true"></span>
+        <pre class="hero-terminal__code"><code><span class="hero-terminal__prompt" aria-hidden="true">$</span> <span class="hero-terminal__cmd">{c.command}</span><span class="hero-terminal__cursor" aria-hidden="true"></span>
 <span class="hero-terminal__out">{c.output}</span></code></pre>
       </div>
     </div>
@@ -255,43 +255,39 @@ const taglineParts = renderTagline(c.tagline, c.taglineHighlight);
   }
 
   .hero-terminal__body {
-    padding: clamp(1.15rem, 3vw, 1.6rem) clamp(1rem, 3vw, 1.45rem) clamp(1.25rem, 3vw, 1.7rem);
+    padding: 0.95rem 1rem 1.05rem;
   }
 
   .hero-terminal__tagline {
-    margin: 0 0 1rem;
-    font-size: clamp(0.98rem, 2vw, 1.12rem);
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    margin: 0 0 0.65rem;
+    font-size: clamp(0.9rem, 1.6vw, 1rem);
+    font-weight: 400;
+    letter-spacing: -0.01em;
     line-height: 1.45;
-    color: var(--color-ink);
+    color: var(--color-ink-soft);
   }
 
   .hero-terminal__code {
     margin: 0;
-    padding: 0.95rem 1rem;
+    padding: 0.7rem 0.85rem;
     overflow-x: auto;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 0.65rem;
+    border-radius: 0.55rem;
     background: #05070a;
     font-family: var(--font-mono);
     font-size: clamp(0.82rem, 1.8vw, 0.92rem);
-    line-height: 1.7;
+    line-height: 1.55;
     color: var(--color-ink-soft);
   }
 
   .hero-terminal__prompt {
-    color: var(--color-muted);
-  }
-
-  .hero-terminal__prompt::before {
-    content: '$ ';
     color: var(--color-brand);
+    font-weight: 400;
   }
 
   .hero-terminal__cmd {
-    color: var(--color-brand);
-    font-weight: 650;
+    color: #f4f5f7;
+    font-weight: 400;
   }
 
   .hero-terminal__cursor {
@@ -300,12 +296,13 @@ const taglineParts = renderTagline(c.tagline, c.taglineHighlight);
     height: 1em;
     margin-left: 0.15rem;
     vertical-align: text-bottom;
-    background: var(--color-brand);
+    background: #f4f5f7;
     animation: blink-cursor 1.1s steps(1) infinite;
   }
 
   .hero-terminal__out {
-    color: #f0c84a;
+    color: var(--color-positive);
+    font-size: 0.8125rem;
   }
 
   @keyframes pulse-live {
