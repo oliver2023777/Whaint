@@ -136,6 +136,7 @@ case "$cmd" in
       "${COMPOSE[@]}" up -d
     else
       warn_whapub_token
+      prep_changelog_build
       info "构建并启动…"
       "${COMPOSE[@]}" up -d --build
     fi

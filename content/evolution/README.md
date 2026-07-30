@@ -21,4 +21,6 @@ bun run sync:changelog
 
 关闭同步：`.env` 设 `SYNC_CHANGELOG=0` 或 `--build-arg SYNC_CHANGELOG=0`。
 
-在 Whapub 说「官方发布」写入那边的 `marketing/changelog/`，push 后重建 Whaint 即可上线。
+在 Whapub 说「官方发布」写入那边的 `marketing/changelog/`，push 后在 Whaint 服务器执行 `./start.sh start --build`（会先同步到本目录再重建；勿只看旧缓存）。
+
+注意：仅 `docker compose build` 且命中缓存时，可能仍是旧篇数；请用 `./start.sh start --build`（带 CACHEBUST）。
