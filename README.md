@@ -113,7 +113,7 @@
 2. **不要修改** `../WhaleCore` 除非用户明确要求。  
 3. 改联系方式只改 `src/lib/site.ts` 的 `contacts`，再同步本文表格。  
 4. 改合规口径只改本仓 `compliance/`，再同步 `/compliance` 页。  
-5. 长文放 `content/`；组件保持干净。  
+5. 长文与页面索引放 `content/`（`changelog/` 产品进化；`compliance/` 页面口径笔记）；组件保持干净。  
 
 本地：`bun install && bun run dev`；构建：`bun run build`。
 
@@ -128,6 +128,13 @@ cd Whaint
 访问：`http://服务器IP:3080`。改域名：编辑 `.env` 的 `PUBLIC_SITE_URL` 后执行 `./start.sh start --build`。
 
 Whapub 为**私有仓**：在服务器 `.env` 填写 `WHAPUB_TOKEN`（GitHub PAT，至少可读 Whapub），再 `./start.sh start --build`。产品进化内容在构建时从 Whapub 的 `marketing/changelog/` 同步。
+
+**自动同步（推荐）**：在 GitHub 配置 Secrets 后，Whapub 一 push `marketing/changelog/**`，Whaint Actions 会把稿写进 `content/changelog/` 并 commit。服务器仍需 `git pull && ./start.sh start --build` 上线（或自行接部署钩子）。
+
+| Secret | 仓 |
+|--------|-----|
+| `WHAPUB_TOKEN` | Whaint（读 Whapub） |
+| `WHAINT_DISPATCH_TOKEN` | Whapub（触发 Whaint `repository_dispatch`） |
 ---
 
 ## 6. 文献索引

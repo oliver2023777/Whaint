@@ -1,0 +1,43 @@
+name: Sync Whapub changelog
+
+on:
+  repository_dispatch:
+    types: [whapub-changelog]
+  workflow_dispatch:
+  schedule:
+    # 兜底：每天 UTC 00:00 再拉一次
+    - cron: '0 0 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Whaint
+        uses: actions/checkout@v4
+
+      - name: Sync from Whapub
+        env:
+          WHAPUB_TOKEN: ${{ secrets.WHAPUB_TOKEN }}
+          WHAPUB_REPO: ${{ vars.WHAPUB_REPO || 'https://github.com/oliver2023777/Whapub.git' }}
+          WHAPUB_REF: ${{ vars.WHAPUB_REF || 'main' }}
+        run: |
+          if [ -z "$WHAPUB_TOKEN" ]; then
+            echo "Missing secret WHAPUB_TOKEN (PAT with read access to Whapub)" >&2
+            exit 1
+          fi
+          sh scripts/sync-changelog.sh
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add content/changelog
+          if git diff --staged --quiet; then
+            echo "No changelog changes"
+            exit 0
+          fi
+          git commit -m "chore: sync changelog from Whapub"
+          git push

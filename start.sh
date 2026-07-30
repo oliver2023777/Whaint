@@ -5,10 +5,12 @@
 #   ./start.sh                 # 构建并启动 → http://IP:3080
 #   ./start.sh start           # 仅启动（不重建）
 #   ./start.sh start --build   # 强制重建并启动（会按 .env 同步 Whapub changelog）
+#   ./start.sh sync            # 只同步 changelog，不重建容器
 #   ./start.sh stop|restart|logs|status|help
 #
 # 无 .env 时会从 .env.example 自动生成；端口固定 3080（见 docker-compose.yml）
-# Whapub 为私有仓时，.env 必须填写 WHAPUB_TOKEN，否则 --build 同步会失败
+# Whapub 为私有仓时，.env 必须填写 WHAPUB_TOKEN，否则 --build / sync 会失败
+# GitHub：Whapub push changelog → 自动触发 Whaint Actions 同步进 content/changelog
 # ═══════════════════════════════════════════════════════════════
 
 set -euo pipefail
@@ -158,6 +160,11 @@ case "$cmd" in
   status|ps)
     "${COMPOSE[@]}" ps
     docker port whaint 80 2>/dev/null || true
+    ;;
+  sync)
+    warn_whapub_token
+    prep_changelog_build
+    ok "changelog 已同步到 content/changelog/（未重建容器；上线请再 ./start.sh start --build）"
     ;;
   help|-h|--help)
     usage
