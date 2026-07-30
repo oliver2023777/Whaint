@@ -129,12 +129,6 @@ cd Whaint
 
 Whapub 为**私有仓**：在服务器 `.env` 填写 `WHAPUB_TOKEN`（GitHub PAT，至少可读 Whapub），再 `./start.sh start --build`。产品进化内容在构建时从 Whapub 的 `marketing/changelog/` 同步。
 
-**自动同步（推荐）**：在 GitHub 配置 Secrets 后，Whapub 一 push `marketing/changelog/**`，Whaint Actions 会把稿写进 `content/changelog/` 并 commit。服务器仍需 `git pull && ./start.sh start --build` 上线（或自行接部署钩子）。
-
-| Secret | 仓 |
-|--------|-----|
-| `WHAPUB_TOKEN` | Whaint（读 Whapub） |
-| `WHAINT_DISPATCH_TOKEN` | Whapub（触发 Whaint `repository_dispatch`） |
 ---
 
 ## 6. 文献索引

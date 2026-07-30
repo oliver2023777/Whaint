@@ -42,4 +42,4 @@
 - 营销站简报：[`../README.md`](../README.md)
 - AI 规范：[`../AGENTS.md`](../AGENTS.md)
 - 公开页摘录：[`../src/pages/compliance.astro`](../src/pages/compliance.astro)
-- 锚点索引：[`../content/compliance.md`](../content/compliance.md)
+- 锚点索引：[`../content/compliance/README.md`](../content/compliance/README.md)

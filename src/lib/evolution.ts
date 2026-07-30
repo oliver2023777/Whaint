@@ -17,6 +17,7 @@ export type EvolutionPost = {
 };
 
 const KINDS: EvolutionKind[] = ['decision', 'weekly', 'note'];
+export const EVOLUTION_KINDS = KINDS;
 const CHANGELOG_DIR = path.join(process.cwd(), 'content/changelog');
 
 /** 正文双语分隔：中文在前，英文在 `<!--en-->` 之后 */

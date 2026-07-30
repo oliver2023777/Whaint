@@ -534,6 +534,7 @@ export const en = {
     note: 'Entries are adapted from product ADRs / engineering decisions for marketing tone; not a full changelog and not performance claims.',
     empty: 'No public entries yet.',
     bodyHint: 'English full text not published yet—title and summary only.',
+    tabsAria: 'Evolution categories',
     relatedLinks: {
       prefix: 'Related pages:',
       product: 'Product Capabilities',

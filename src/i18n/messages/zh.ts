@@ -534,6 +534,7 @@ export const zh = {
     note: '条目来自产品仓 ADR / 工程决策，经营销口径改写；不构成收益承诺，也不等同完整变更日志。',
     empty: '暂无公开条目。',
     bodyHint: '正文暂以中文为主。',
+    tabsAria: '产品进化分类',
     relatedLinks: {
       prefix: '相关页面：',
       product: '产品能力',

@@ -3,54 +3,99 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PageCtaBand from '../components/PageCtaBand.astro';
 import PageHero from '../components/PageHero.astro';
 import { getLocale, getMessages, localizePath } from '../i18n';
-import { kindLabel, loadEvolutionPosts } from '../lib/evolution';
+import {
+  EVOLUTION_KINDS,
+  kindLabel,
+  loadEvolutionPosts,
+  type EvolutionPost,
+} from '../lib/evolution';
 
 const locale = getLocale(Astro.currentLocale);
 const t = getMessages(locale);
 const c = t.changelog;
 const posts = loadEvolutionPosts();
 const isEn = locale === 'en';
+
+const byKind = EVOLUTION_KINDS.map((kind) => ({
+  kind,
+  label: kindLabel(kind, locale),
+  posts: posts.filter((p) => p.kind === kind),
+})).filter((g) => g.posts.length > 0);
+
+function renderCard(post: EvolutionPost) {
+  const title = isEn ? post.titleEn : post.title;
+  const summary = isEn ? post.summaryEn : post.summary;
+  const bodyText = isEn ? post.bodyEn : post.body;
+  const paras = bodyText.split(/\n\n+/).filter(Boolean);
+  const showEnMissingHint = isEn && !post.bodyEn && Boolean(post.body);
+  return { title, summary, paras, showEnMissingHint, post };
+}
 ---
 
 <BaseLayout title={c.title} description={c.description} path="/changelog">
   <PageHero kicker={c.kicker} title={c.pageTitle} lede={c.lede} />
+
+  {
+    byKind.length > 0 && (
+      <nav class="pill-sticky" data-changelog-sticky aria-label={c.tabsAria}>
+        <div class="wrap pill-nav">
+          {byKind.map((g, i) => (
+            <a
+              class:list={['pill-nav__item', i === 0 && 'is-active']}
+              href={`#changelog-${g.kind}`}
+              data-changelog-nav={g.kind}
+            >
+              {g.label}
+            </a>
+          ))}
+        </div>
+      </nav>
+    )
+  }
 
   <section class="section section-split section-compact">
     <div class="wrap">
       <p class="changelog-note">{c.note}</p>
 
       {
-        posts.length === 0 ? (
+        byKind.length === 0 ? (
           <p class="changelog-empty">{c.empty}</p>
         ) : (
-          <ol class="changelog-list">
-            {posts.map((post) => {
-              const title = isEn ? post.titleEn : post.title;
-              const summary = isEn ? post.summaryEn : post.summary;
-              const bodyText = isEn ? post.bodyEn : post.body;
-              const paras = bodyText.split(/\n\n+/).filter(Boolean);
-              const showEnMissingHint = isEn && !post.bodyEn && Boolean(post.body);
-              return (
-                <li class="changelog-card">
-                  <div class="changelog-card__meta">
-                    <time datetime={post.date}>{post.date}</time>
-                    <span class="changelog-card__kind">{kindLabel(post.kind, locale)}</span>
-                    {post.source && <span class="changelog-card__source">{post.source}</span>}
-                  </div>
-                  <h2 class="changelog-card__title">{title}</h2>
-                  {summary && <p class="changelog-card__summary">{summary}</p>}
-                  {(paras.length > 0 || showEnMissingHint) && (
-                    <div class="changelog-card__body">
-                      {showEnMissingHint && <p class="changelog-card__hint">{c.bodyHint}</p>}
-                      {paras.map((para) => (
-                        <p>{para}</p>
-                      ))}
-                    </div>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
+          <div class="changelog-stack">
+            {byKind.map((g) => (
+              <section
+                id={`changelog-${g.kind}`}
+                class="changelog-panel"
+                data-changelog-section={g.kind}
+              >
+                <h2 class="changelog-panel__title">{g.label}</h2>
+                <ol class="changelog-list">
+                  {g.posts.map((post) => {
+                    const { title, summary, paras, showEnMissingHint } = renderCard(post);
+                    return (
+                      <li class="changelog-card">
+                        <div class="changelog-card__meta">
+                          <time datetime={post.date}>{post.date}</time>
+                          <span class="changelog-card__kind">{kindLabel(post.kind, locale)}</span>
+                          {post.source && <span class="changelog-card__source">{post.source}</span>}
+                        </div>
+                        <h3 class="changelog-card__title">{title}</h3>
+                        {summary && <p class="changelog-card__summary">{summary}</p>}
+                        {(paras.length > 0 || showEnMissingHint) && (
+                          <div class="changelog-card__body">
+                            {showEnMissingHint && <p class="changelog-card__hint">{c.bodyHint}</p>}
+                            {paras.map((para) => (
+                              <p>{para}</p>
+                            ))}
+                          </div>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ol>
+              </section>
+            ))}
+          </div>
         )
       }
 
@@ -79,6 +124,21 @@ const isEn = locale === 'en';
 
   .changelog-empty {
     color: var(--color-ink-soft);
+  }
+
+  .changelog-stack {
+    display: grid;
+    gap: clamp(2rem, 5vw, 3rem);
+  }
+
+  .changelog-panel {
+    scroll-margin-top: calc(var(--header-h) + 3.75rem);
+  }
+
+  .changelog-panel__title {
+    margin: 0 0 1rem;
+    font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+    letter-spacing: -0.02em;
   }
 
   .changelog-list {
@@ -154,3 +214,53 @@ const isEn = locale === 'en';
     line-height: 1.7;
   }
 </style>
+
+<script>
+  const sticky = document.querySelector('[data-changelog-sticky]');
+  if (sticky) {
+    const links = Array.from(sticky.querySelectorAll('[data-changelog-nav]'));
+    const sections = Array.from(document.querySelectorAll('[data-changelog-section]'));
+
+    const setActive = (id) => {
+      links.forEach((link) => {
+        link.classList.toggle('is-active', link.getAttribute('data-changelog-nav') === id);
+      });
+    };
+
+    if (sections[0] instanceof HTMLElement) {
+      setActive(sections[0].getAttribute('data-changelog-section') || '');
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0]?.target;
+        if (top instanceof HTMLElement) {
+          setActive(top.getAttribute('data-changelog-section') || '');
+        }
+      },
+      {
+        rootMargin: '-30% 0px -55% 0px',
+        threshold: [0.1, 0.25, 0.5],
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+
+    links.forEach((link) => {
+      link.addEventListener('click', () => {
+        const id = link.getAttribute('data-changelog-nav');
+        if (id) setActive(id);
+      });
+    });
+
+    const fromHash = () => {
+      const id = window.location.hash.replace(/^#/, '').replace(/^changelog-/, '');
+      if (id) setActive(id);
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+  }
+</script>
