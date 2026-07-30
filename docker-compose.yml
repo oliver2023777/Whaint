@@ -13,6 +13,8 @@ services:
         WHAPUB_REF: ${WHAPUB_REF:-main}
         # 私有仓必填：写在 .env，勿提交仓库
         WHAPUB_TOKEN: ${WHAPUB_TOKEN:-}
+        # start.sh 构建时会写入当前时间戳，强制重新同步 Whapub
+        CACHEBUST: ${CACHEBUST:-1}
     container_name: whaint
     restart: unless-stopped
     ports:

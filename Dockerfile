@@ -22,6 +22,8 @@ ARG WHAPUB_REPO=https://github.com/oliver2023777/Whapub.git
 ARG WHAPUB_REF=main
 # private 仓构建时传入：--build-arg WHAPUB_TOKEN=…
 ARG WHAPUB_TOKEN=
+# 每次构建传入新值，避免「Whapub 已更新但本层被 Docker 缓存」
+ARG CACHEBUST=1
 
 ENV PUBLIC_SITE_URL=$PUBLIC_SITE_URL \
     PUBLIC_APP_URL=$PUBLIC_APP_URL \
@@ -30,7 +32,8 @@ ENV PUBLIC_SITE_URL=$PUBLIC_SITE_URL \
     WHAPUB_REF=$WHAPUB_REF \
     WHAPUB_TOKEN=$WHAPUB_TOKEN
 
-RUN if [ "$SYNC_CHANGELOG" = "1" ]; then bun run sync:changelog; fi \
+RUN echo "cachebust=${CACHEBUST}" \
+ && if [ "$SYNC_CHANGELOG" = "1" ]; then bun run sync:changelog; fi \
  && bun run build
 
 FROM nginx:1.27-alpine

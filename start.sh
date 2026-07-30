@@ -76,6 +76,29 @@ warn_whapub_token() {
   fi
 }
 
+# 构建前：宿主机同步 changelog（面板里能看到篇数）+ CACHEBUST 避免 Docker 缓存旧层
+prep_changelog_build() {
+  local sync
+  sync="$(env_get SYNC_CHANGELOG)"
+  [[ -z "$sync" ]] && sync=1
+
+  export CACHEBUST="$(date +%s)"
+  info "CACHEBUST=${CACHEBUST}（强制重新拉取 Whapub）"
+
+  if [[ "$sync" != "0" ]]; then
+    export WHAPUB_REPO="$(env_get WHAPUB_REPO)"
+    export WHAPUB_REF="$(env_get WHAPUB_REF)"
+    export WHAPUB_TOKEN="$(env_get WHAPUB_TOKEN)"
+    [[ -z "$WHAPUB_REPO" ]] && unset WHAPUB_REPO
+    [[ -z "$WHAPUB_REF" ]] && unset WHAPUB_REF
+    info "宿主机同步 Whapub → content/evolution/posts/ …"
+    if ! sh "$ROOT/scripts/sync-changelog.sh"; then
+      err "宿主机同步失败。请检查 WHAPUB_TOKEN 与网络后重试。"
+      exit 1
+    fi
+  fi
+}
+
 usage() {
   sed -n '2,12p' "$0"
 }
