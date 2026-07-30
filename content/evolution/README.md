@@ -3,7 +3,7 @@
 构建时消费目录。真源在 **Whapub**：
 
 - 仓：https://github.com/oliver2023777/Whapub
-- 路径：`marketing/changelog/posts/`
+- 路径：`marketing/changelog/{decision|weekly|note}/`
 
 ## 同步
 
