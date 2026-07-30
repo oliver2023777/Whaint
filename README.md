@@ -127,6 +127,7 @@ cd Whaint
 
 访问：`http://服务器IP:3080`。改域名：编辑 `.env` 的 `PUBLIC_SITE_URL` 后执行 `./start.sh start --build`。
 
+Whapub 为**私有仓**：在服务器 `.env` 填写 `WHAPUB_TOKEN`（GitHub PAT，至少可读 Whapub），再 `./start.sh start --build`。产品进化内容在构建时从 Whapub 的 `marketing/changelog/` 同步。
 ---
 
 ## 6. 文献索引

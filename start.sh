@@ -4,10 +4,11 @@
 #
 #   ./start.sh                 # 构建并启动 → http://IP:3080
 #   ./start.sh start           # 仅启动（不重建）
-#   ./start.sh start --build   # 强制重建并启动
+#   ./start.sh start --build   # 强制重建并启动（会按 .env 同步 Whapub changelog）
 #   ./start.sh stop|restart|logs|status|help
 #
 # 无 .env 时会从 .env.example 自动生成；端口固定 3080（见 docker-compose.yml）
+# Whapub 为私有仓时，.env 必须填写 WHAPUB_TOKEN，否则 --build 同步会失败
 # ═══════════════════════════════════════════════════════════════
 
 set -euo pipefail
@@ -51,6 +52,28 @@ ensure_env() {
   cp .env.example .env
   ok "未找到 .env，已自动从 .env.example 创建"
   warn "默认域名是占位符；上线前请改 .env 里的 PUBLIC_SITE_URL，再执行：./start.sh start --build"
+  warn "Whapub 为私有仓：请在 .env 填写 WHAPUB_TOKEN 后再重建"
+}
+
+# 从 .env 读键（不 export 全部，避免污染）
+env_get() {
+  local key="$1"
+  [[ -f .env ]] || { echo ""; return 0; }
+  local line
+  line="$(grep -E "^${key}=" .env | tail -n1 || true)"
+  echo "${line#${key}=}"
+}
+
+warn_whapub_token() {
+  local sync token
+  sync="$(env_get SYNC_CHANGELOG)"
+  [[ -z "$sync" ]] && sync=1
+  [[ "$sync" == "0" ]] && return 0
+  token="$(env_get WHAPUB_TOKEN)"
+  if [[ -z "$token" ]]; then
+    warn "SYNC_CHANGELOG=1 但 .env 未设置 WHAPUB_TOKEN（Whapub 私有仓构建会失败）"
+    warn "在 GitHub 创建有 repo 读权限的 PAT，写入 .env 的 WHAPUB_TOKEN= 后重试"
+  fi
 }
 
 usage() {
@@ -89,6 +112,7 @@ case "$cmd" in
       info "启动容器（不重建）…"
       "${COMPOSE[@]}" up -d
     else
+      warn_whapub_token
       info "构建并启动…"
       "${COMPOSE[@]}" up -d --build
     fi

@@ -8,6 +8,11 @@ services:
         PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-https://whalecore.example}
         PUBLIC_APP_URL: ${PUBLIC_APP_URL:-https://whacore.cn}
         PUBLIC_CONTACT_EMAIL: ${PUBLIC_CONTACT_EMAIL:-hello@whalecore.example}
+        SYNC_CHANGELOG: ${SYNC_CHANGELOG:-1}
+        WHAPUB_REPO: ${WHAPUB_REPO:-https://github.com/oliver2023777/Whapub.git}
+        WHAPUB_REF: ${WHAPUB_REF:-main}
+        # 私有仓必填：写在 .env，勿提交仓库
+        WHAPUB_TOKEN: ${WHAPUB_TOKEN:-}
     container_name: whaint
     restart: unless-stopped
     ports:
