@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "sync:changelog": "bash scripts/sync-changelog.sh",
+    "sync:changelog": "sh scripts/sync-changelog.sh",
     "build": "astro build",
-    "build:ci": "bash scripts/sync-changelog.sh && astro build",
+    "build:ci": "sh scripts/sync-changelog.sh && astro build",
     "preview": "astro preview",
     "astro": "astro"
   },
