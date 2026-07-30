@@ -533,7 +533,7 @@ export const en = {
     lede: 'Hard choices written as readable notes—deploy, upgrade, compliance boundaries—so you can see how the source grew.',
     note: 'Entries are adapted from product ADRs / engineering decisions for marketing tone; not a full changelog and not performance claims.',
     empty: 'No public entries yet.',
-    bodyHint: 'Full text is currently in Chinese.',
+    bodyHint: 'English full text not published yet—title and summary only.',
     relatedLinks: {
       prefix: 'Related pages:',
       product: 'Product Capabilities',

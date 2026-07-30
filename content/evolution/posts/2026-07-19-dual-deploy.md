@@ -15,3 +15,13 @@ source: ADR-0004
 所以做成双路径：高配走源码侧一键构建启动；低配本机打包装服务器再导入。两套说明都要维护，但这是代价。
 
 原因只有一个——交付物要能装上，而不是只在一种理想机器上好看。
+
+<!--en-->
+
+Customer hosts vary wildly: some can Docker-build on the server; some cannot.
+
+Image-pack only annoys strong hosts. On-server compile only fails on weak ones. Worse: a pack script overwriting the root start entry—conflicting entrypoints, easy mistakes.
+
+So we keep two paths: strong hosts build and start from source; weak hosts pack locally, upload, and import. Two guides to maintain—that is the cost.
+
+One reason only: the delivery must install, not merely look good on an ideal machine.

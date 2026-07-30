@@ -15,3 +15,13 @@ source: ADR-0007
 最后：后台只提示有更新；真正换版本到服务器跑固定安装 / 升级命令。发版地址不对网页暴露。
 
 原因很具体——从网页里直接动服务器，出事了谁都拦不住。少一个神奇按钮，有时是在多留一点可控。
+
+<!--en-->
+
+For upgrades we nearly picked the “fun” path: one admin button, the system swaps itself.
+
+Some wanted the console to replace the image with zero host work. Others said driving host Docker from a page or container is risky, and live trading can get yanked mid-session. Silent auto-upgrade and splitting install vs upgrade into two commands both failed—uncontrolled environments, or extra cognitive load.
+
+Final call: admin only notifies; hosts run a fixed install/upgrade command. Release URLs stay off the web UI.
+
+Concrete reason—if the browser can move the server, nothing can stop a bad day. One fewer magic button is sometimes more control.

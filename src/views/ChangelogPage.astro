@@ -27,7 +27,9 @@ const isEn = locale === 'en';
             {posts.map((post) => {
               const title = isEn ? post.titleEn : post.title;
               const summary = isEn ? post.summaryEn : post.summary;
-              const paras = post.body.split(/\n\n+/).filter(Boolean);
+              const bodyText = isEn ? post.bodyEn : post.body;
+              const paras = bodyText.split(/\n\n+/).filter(Boolean);
+              const showEnMissingHint = isEn && !post.bodyEn && Boolean(post.body);
               return (
                 <li class="changelog-card">
                   <div class="changelog-card__meta">
@@ -37,12 +39,14 @@ const isEn = locale === 'en';
                   </div>
                   <h2 class="changelog-card__title">{title}</h2>
                   {summary && <p class="changelog-card__summary">{summary}</p>}
-                  <div class="changelog-card__body">
-                    {isEn && <p class="changelog-card__hint">{c.bodyHint}</p>}
-                    {paras.map((para) => (
-                      <p>{para}</p>
-                    ))}
-                  </div>
+                  {(paras.length > 0 || showEnMissingHint) && (
+                    <div class="changelog-card__body">
+                      {showEnMissingHint && <p class="changelog-card__hint">{c.bodyHint}</p>}
+                      {paras.map((para) => (
+                        <p>{para}</p>
+                      ))}
+                    </div>
+                  )}
                 </li>
               );
             })}

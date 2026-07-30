@@ -13,9 +13,13 @@ export type EvolutionPost = {
   summaryEn: string;
   source?: string;
   body: string;
+  bodyEn: string;
 };
 
 const POSTS_DIR = path.join(process.cwd(), 'content/evolution/posts');
+
+/** 正文双语分隔：中文在前，英文在 `<!--en-->` 之后 */
+const EN_BODY_MARK = /(?:^|\n)\s*<!--\s*en\s*-->\s*(?:\n|$)/i;
 
 function parseFrontmatter(raw: string): { meta: Record<string, string>; body: string } {
   const trimmed = raw.replace(/^\uFEFF/, '');
@@ -40,6 +44,16 @@ function parseFrontmatter(raw: string): { meta: Record<string, string>; body: st
   return { meta, body };
 }
 
+function splitBilingualBody(rawBody: string): { body: string; bodyEn: string } {
+  const m = rawBody.match(EN_BODY_MARK);
+  if (!m || m.index === undefined) {
+    return { body: rawBody.trim(), bodyEn: '' };
+  }
+  const body = rawBody.slice(0, m.index).trim();
+  const bodyEn = rawBody.slice(m.index + m[0].length).trim();
+  return { body, bodyEn };
+}
+
 export function loadEvolutionPosts(): EvolutionPost[] {
   if (!fs.existsSync(POSTS_DIR)) return [];
   const files = fs
@@ -50,7 +64,8 @@ export function loadEvolutionPosts(): EvolutionPost[] {
 
   return files.map((file) => {
     const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-    const { meta, body } = parseFrontmatter(raw);
+    const { meta, body: rawBody } = parseFrontmatter(raw);
+    const { body, bodyEn } = splitBilingualBody(rawBody);
     const slug = file.replace(/\.md$/, '');
     const kind = (meta.kind as EvolutionKind) || 'note';
     return {
@@ -63,6 +78,7 @@ export function loadEvolutionPosts(): EvolutionPost[] {
       summaryEn: meta.summaryEn || meta.summary || '',
       source: meta.source,
       body,
+      bodyEn,
     };
   });
 }

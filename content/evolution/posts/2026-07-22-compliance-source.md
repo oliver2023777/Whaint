@@ -15,3 +15,13 @@ source: ADR-0006
 最后收成同一套合规文档，对外页、客服、互站只准引用这一处。定位写死：策略执行软件平台，可做托管；不碰用户资金、不提供投资建议、不承诺收益。
 
 原因只有一个——口径打架时，拒不了单，也说不清边界。少写几篇不可怕，各说各话才可怕。
+
+<!--en-->
+
+When compliance copy lived in many places, we almost kept writing separately.
+
+Some wanted one long “license and bans” post on listing sites. Some wanted everything in the README. Some hoped tech locks would stop abuse. All three failed: second sources of truth, README overload, and full source you cannot truly lock down.
+
+We collapsed to one compliance set. Site, support, and listings may only cite that. Positioning is fixed: a strategy-execution software platform that can run custody modes—no holding user funds, no investment advice, no return promises.
+
+One reason: when copy conflicts, you cannot refuse bad deals or explain the boundary. Writing less is fine. Talking past each other is not.
