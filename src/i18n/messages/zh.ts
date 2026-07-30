@@ -16,13 +16,14 @@ export const zh = {
     home: '首页',
     breadcrumbAria: '面包屑',
   },
-  nav: {
-    product: '产品',
-    solutions: '运营模式',
-    contact: '价格',
-    faq: '常见问题',
-    compliance: '合规',
-  },
+    nav: {
+      product: '产品',
+      solutions: '运营模式',
+      contact: '价格',
+      faq: '常见问题',
+      compliance: '合规',
+      changelog: '产品进化',
+    },
   footer: {
     productNav: '产品导航',
     resources: '资源与合规',
@@ -37,6 +38,7 @@ export const zh = {
       { href: '/contact', label: '价格' },
     ],
     resourceLinks: [
+      { href: '/changelog', label: '产品进化' },
       { href: '/faq', label: '常见问题' },
       { href: '/compliance', label: '合规摘要' },
     ],
@@ -521,6 +523,23 @@ export const zh = {
         ],
       },
     ],
+  },
+  changelog: {
+    title: '产品进化',
+    description:
+      '鲸擎 · WhaleCore 产品进化日志：从真实工程决策里挑出对买家有用的节点——不是营销周报，也不承诺收益。',
+    kicker: 'evolution/',
+    pageTitle: '产品进化',
+    lede: '把做过的硬选择写成可读记录：部署、升级、合规边界。便于你判断这套源码怎么长出来的。',
+    note: '条目来自产品仓 ADR / 工程决策，经营销口径改写；不构成收益承诺，也不等同完整变更日志。',
+    empty: '暂无公开条目。',
+    bodyHint: '正文暂以中文为主。',
+    relatedLinks: {
+      prefix: '相关页面：',
+      product: '产品能力',
+      contact: '价格与交付',
+      compliance: '合规摘要',
+    },
   },
   faq: {
     title: '常见问题',

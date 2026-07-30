@@ -19,6 +19,7 @@
 - **主 CTA：询价购买** → `/contact`；次 CTA：看演示站 `https://whacore.cn`。  
 - **不要**把交易所 Key、策略 Prompt 配进营销站。  
 - 公开文案口径必须对齐本仓 [`compliance/`](compliance/README.md)，禁止另写第二套「稳赚」话术。  
+- **GEO / AI 抓取索引**：构建后提供 [`/llms.txt`](https://llmstxt.org/) 与 `/llms-full.txt`（文案真源 `src/lib/llmsTxt.ts`，随 `PUBLIC_SITE_URL` 生成绝对链接）。  
 - 卖点素材可参考 `../WhaleCore/docs/huzhan/`，勿另造冲突卖点。
 
 ### 联系方式真源（写死）
@@ -136,4 +137,5 @@ cd Whaint
 | 销售规范 | [`compliance/销售规范.md`](compliance/销售规范.md) |
 | 产品能力（参考） | `../WhaleCore/README.md` |
 | 互站商品文案（参考） | `../WhaleCore/docs/huzhan/v1-商品介绍.md` |
+| 闲鱼 / 小红书短话术 | `../WhaleCore/docs/huzhan/渠道短话术-闲鱼小红书.md` |
 | 运营模式（参考） | `../WhaleCore/docs/guides/运营商模式.md` |

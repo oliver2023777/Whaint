@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageCtaBand from '../components/PageCtaBand.astro';
+import PageHero from '../components/PageHero.astro';
+import { getLocale, getMessages, localizePath } from '../i18n';
+import { kindLabel, loadEvolutionPosts } from '../lib/evolution';
+
+const locale = getLocale(Astro.currentLocale);
+const t = getMessages(locale);
+const c = t.changelog;
+const posts = loadEvolutionPosts();
+const isEn = locale === 'en';
+---
+
+<BaseLayout title={c.title} description={c.description} path="/changelog">
+  <PageHero kicker={c.kicker} title={c.pageTitle} lede={c.lede} />
+
+  <section class="section section-split section-compact">
+    <div class="wrap">
+      <p class="changelog-note">{c.note}</p>
+
+      {
+        posts.length === 0 ? (
+          <p class="changelog-empty">{c.empty}</p>
+        ) : (
+          <ol class="changelog-list">
+            {posts.map((post) => {
+              const title = isEn ? post.titleEn : post.title;
+              const summary = isEn ? post.summaryEn : post.summary;
+              const paras = post.body.split(/\n\n+/).filter(Boolean);
+              return (
+                <li class="changelog-card">
+                  <div class="changelog-card__meta">
+                    <time datetime={post.date}>{post.date}</time>
+                    <span class="changelog-card__kind">{kindLabel(post.kind, locale)}</span>
+                    {post.source && <span class="changelog-card__source">{post.source}</span>}
+                  </div>
+                  <h2 class="changelog-card__title">{title}</h2>
+                  {summary && <p class="changelog-card__summary">{summary}</p>}
+                  <div class="changelog-card__body">
+                    {isEn && <p class="changelog-card__hint">{c.bodyHint}</p>}
+                    {paras.map((para) => (
+                      <p>{para}</p>
+                    ))}
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        )
+      }
+
+      <p class="inner-links">
+        {c.relatedLinks.prefix}
+        <a href={localizePath('/product', locale)}>{c.relatedLinks.product}</a>
+        ·
+        <a href={localizePath('/contact', locale)}>{c.relatedLinks.contact}</a>
+        ·
+        <a href={localizePath('/compliance', locale)}>{c.relatedLinks.compliance}</a>
+      </p>
+    </div>
+  </section>
+
+  <PageCtaBand />
+</BaseLayout>
+
+<style>
+  .changelog-note {
+    margin: 0 0 1.5rem;
+    max-width: 40rem;
+    color: var(--color-muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .changelog-empty {
+    color: var(--color-ink-soft);
+  }
+
+  .changelog-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .changelog-card {
+    margin: 0;
+    padding: 1.35rem 1.4rem 1.4rem;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+  }
+
+  .changelog-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.75rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+  }
+
+  .changelog-card__kind {
+    color: var(--color-brand);
+  }
+
+  .changelog-card__source {
+    opacity: 0.85;
+  }
+
+  .changelog-card__title {
+    margin: 0;
+    font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+  }
+
+  .changelog-card__summary {
+    margin: 0.55rem 0 0;
+    color: var(--color-ink-soft);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .changelog-card__body {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .changelog-card__hint {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--color-muted);
+  }
+
+  .changelog-card__body p {
+    margin: 0;
+    color: #a1a1aa;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+</style>

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# AI / LLM context indexes (see also /llms-full.txt)
+# https://llmstxt.org/
+
 Sitemap: https://whalecore.example/sitemap-index.xml

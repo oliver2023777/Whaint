@@ -16,13 +16,14 @@ export const en = {
     home: 'Home',
     breadcrumbAria: 'Breadcrumb',
   },
-  nav: {
-    product: 'Product',
-    solutions: 'Operating Modes',
-    contact: 'Pricing',
-    faq: 'FAQ',
-    compliance: 'Compliance',
-  },
+    nav: {
+      product: 'Product',
+      solutions: 'Operating Modes',
+      contact: 'Pricing',
+      faq: 'FAQ',
+      compliance: 'Compliance',
+      changelog: 'Evolution',
+    },
   footer: {
     productNav: 'Product',
     resources: 'Resources & Compliance',
@@ -37,6 +38,7 @@ export const en = {
       { href: '/contact', label: 'Pricing' },
     ],
     resourceLinks: [
+      { href: '/changelog', label: 'Product evolution' },
       { href: '/faq', label: 'FAQ' },
       { href: '/compliance', label: 'Compliance Summary' },
     ],
@@ -521,6 +523,23 @@ export const en = {
         ],
       },
     ],
+  },
+  changelog: {
+    title: 'Product evolution',
+    description:
+      'WhaleCore product evolution notes: engineering decisions that matter to buyers—not a marketing newsletter, and never a return promise.',
+    kicker: 'evolution/',
+    pageTitle: 'Product evolution',
+    lede: 'Hard choices written as readable notes—deploy, upgrade, compliance boundaries—so you can see how the source grew.',
+    note: 'Entries are adapted from product ADRs / engineering decisions for marketing tone; not a full changelog and not performance claims.',
+    empty: 'No public entries yet.',
+    bodyHint: 'Full text is currently in Chinese.',
+    relatedLinks: {
+      prefix: 'Related pages:',
+      product: 'Product Capabilities',
+      contact: 'Pricing & Delivery',
+      compliance: 'Compliance Summary',
+    },
   },
   faq: {
     title: 'FAQ',
