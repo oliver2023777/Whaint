@@ -1,10 +1,10 @@
 #!/bin/sh
-# 从 Whapub 拉取官网产品进化稿 → content/evolution/posts/
-# 真源：marketing/changelog/{decision|weekly|note}/*.md
+# 从 Whapub 拉取官网产品进化稿 → content/changelog/{decision|weekly|note}/
+# 与 Whapub marketing/changelog 目录结构对齐
 set -eu
 
 ROOT="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
-DEST="$ROOT/content/evolution/posts"
+DEST_ROOT="$ROOT/content/changelog"
 REPO="${WHAPUB_REPO:-https://github.com/oliver2023777/Whapub.git}"
 REF="${WHAPUB_REF:-main}"
 SPARSE_PATH="marketing/changelog"
@@ -23,7 +23,7 @@ if [ -n "${WHAPUB_TOKEN:-}" ]; then
   esac
 fi
 
-echo "→ sync changelog from ${REPO}@${REF} (${SPARSE_PATH}/{decision,weekly,note})"
+echo "→ sync changelog from ${REPO}@${REF} → content/changelog/{decision,weekly,note}"
 
 git clone --depth 1 --filter=blob:none --sparse --branch "$REF" "$CLONE_URL" "$TMP/whapub"
 git -C "$TMP/whapub" sparse-checkout set "$SPARSE_PATH"
@@ -34,12 +34,15 @@ if [ ! -d "$SRC_ROOT" ]; then
   exit 1
 fi
 
-mkdir -p "$DEST"
-find "$DEST" -type f -name '*.md' -delete
+# 清掉旧扁平目录（若仍存在）
+rm -rf "$ROOT/content/evolution/posts" "$ROOT/content/evolution"
 
-# 按 kind 子目录扁平拷入 posts/（跳过 README、.gitkeep）
 count=0
 for kind in decision weekly note; do
+  dest="$DEST_ROOT/$kind"
+  mkdir -p "$dest"
+  find "$dest" -type f -name '*.md' ! -name '.gitkeep.md' -delete
+
   dir="$SRC_ROOT/$kind"
   [ -d "$dir" ] || continue
   for f in "$dir"/*.md; do
@@ -47,11 +50,9 @@ for kind in decision weekly note; do
     base="$(basename "$f")"
     case "$base" in
       .gitkeep.md|README.md) continue ;;
-    esac
-    case "$base" in
       _*) continue ;;
     esac
-    cp "$f" "$DEST/$base"
+    cp "$f" "$dest/$base"
     count=$((count + 1))
   done
 done
@@ -61,4 +62,4 @@ if [ "$count" -eq 0 ]; then
   exit 1
 fi
 
-echo "✓ synced ${count} post(s) → content/evolution/posts/"
+echo "✓ synced ${count} post(s) → content/changelog/{decision,weekly,note}/"

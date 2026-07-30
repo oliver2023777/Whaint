@@ -16,7 +16,8 @@ export type EvolutionPost = {
   bodyEn: string;
 };
 
-const POSTS_DIR = path.join(process.cwd(), 'content/evolution/posts');
+const KINDS: EvolutionKind[] = ['decision', 'weekly', 'note'];
+const CHANGELOG_DIR = path.join(process.cwd(), 'content/changelog');
 
 /** 正文双语分隔：中文在前，英文在 `<!--en-->` 之后 */
 const EN_BODY_MARK = /(?:^|\n)\s*<!--\s*en\s*-->\s*(?:\n|$)/i;
@@ -54,33 +55,36 @@ function splitBilingualBody(rawBody: string): { body: string; bodyEn: string } {
   return { body, bodyEn };
 }
 
-export function loadEvolutionPosts(): EvolutionPost[] {
-  if (!fs.existsSync(POSTS_DIR)) return [];
-  const files = fs
-    .readdirSync(POSTS_DIR)
-    .filter((f) => f.endsWith('.md') && !f.startsWith('_'))
-    .sort()
-    .reverse();
+function loadKindDir(kind: EvolutionKind): EvolutionPost[] {
+  const dir = path.join(CHANGELOG_DIR, kind);
+  if (!fs.existsSync(dir)) return [];
+  return fs
+    .readdirSync(dir)
+    .filter((f) => f.endsWith('.md') && !f.startsWith('_') && f !== '.gitkeep.md' && f !== 'README.md')
+    .map((file) => {
+      const raw = fs.readFileSync(path.join(dir, file), 'utf8');
+      const { meta, body: rawBody } = parseFrontmatter(raw);
+      const { body, bodyEn } = splitBilingualBody(rawBody);
+      const slug = file.replace(/\.md$/, '');
+      const metaKind = (meta.kind as EvolutionKind) || kind;
+      return {
+        slug,
+        date: meta.date || slug.slice(0, 10),
+        kind: metaKind,
+        title: meta.title || slug,
+        titleEn: meta.titleEn || meta.title || slug,
+        summary: meta.summary || '',
+        summaryEn: meta.summaryEn || meta.summary || '',
+        source: meta.source,
+        body,
+        bodyEn,
+      };
+    });
+}
 
-  return files.map((file) => {
-    const raw = fs.readFileSync(path.join(POSTS_DIR, file), 'utf8');
-    const { meta, body: rawBody } = parseFrontmatter(raw);
-    const { body, bodyEn } = splitBilingualBody(rawBody);
-    const slug = file.replace(/\.md$/, '');
-    const kind = (meta.kind as EvolutionKind) || 'note';
-    return {
-      slug,
-      date: meta.date || slug.slice(0, 10),
-      kind,
-      title: meta.title || slug,
-      titleEn: meta.titleEn || meta.title || slug,
-      summary: meta.summary || '',
-      summaryEn: meta.summaryEn || meta.summary || '',
-      source: meta.source,
-      body,
-      bodyEn,
-    };
-  });
+export function loadEvolutionPosts(): EvolutionPost[] {
+  if (!fs.existsSync(CHANGELOG_DIR)) return [];
+  return KINDS.flatMap(loadKindDir).sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
 }
 
 export function kindLabel(kind: EvolutionKind, locale: 'zh' | 'en'): string {

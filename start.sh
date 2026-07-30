@@ -91,7 +91,7 @@ prep_changelog_build() {
     export WHAPUB_TOKEN="$(env_get WHAPUB_TOKEN)"
     [[ -z "$WHAPUB_REPO" ]] && unset WHAPUB_REPO
     [[ -z "$WHAPUB_REF" ]] && unset WHAPUB_REF
-    info "宿主机同步 Whapub → content/evolution/posts/ …"
+    info "宿主机同步 Whapub → content/changelog/{decision,weekly,note}/ …"
     if ! sh "$ROOT/scripts/sync-changelog.sh"; then
       err "宿主机同步失败。请检查 WHAPUB_TOKEN 与网络后重试。"
       exit 1

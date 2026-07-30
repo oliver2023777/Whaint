@@ -1,6 +1,6 @@
 # Whaint · 营销站静态镜像
 # 构建期注入 PUBLIC_*，运行期 nginx 托管 dist/
-# 默认构建前从 Whapub 同步 marketing/changelog → content/evolution/posts/
+# 默认构建前从 Whapub 同步 marketing/changelog → content/changelog/{kind}/
 
 FROM oven/bun:1.2-alpine AS build
 WORKDIR /app
