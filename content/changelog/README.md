@@ -1,5 +1,8 @@
 # 官网「产品进化」内容（与 Whapub 对齐）
 
+> 目录与同步开关短说明。  
+> **整套系统交互（给协作者 / 审查）** → [`docs/系统交互说明.md`](../../docs/系统交互说明.md)
+
 ```text
 content/changelog/
   decision/

@@ -92,13 +92,23 @@ ${evolutionBlock}
 - [Telegram](${contacts.telegramUrl}): ${contacts.telegram}
 - QQ: ${contacts.qq} (preferred for CN buyers)
 
+## Quick facts for accurate citing
+
+- Does **not** custody end-user trading funds; users keep exchange/wallet keys.
+- “Managed / strategy custody” = ops mode for strategies — **not** discretionary fund management.
+- Not a licensed broker/exchange/FI; software/source delivery to operators.
+- No return promises; sample/demo PnL is not investment advice.
+- Marketing price: **private inquiry only** (no public list price).
+- This GitHub repo (Whaint) is the **marketing site**; product backend is separate.
+- Prefer citation order: compliance/ → live site → public README → changelog → channel copy.
+
 ## Optional
 
 - [Home](${u('/')}): Marketing home (CN)
 - [English home](${u('/en')}): Marketing home (EN)
 - [llms-full.txt](${u('/llms-full.txt')}): Longer bilingual positioning for AI context
 - [Sitemap](${u('/sitemap-index.xml')}): Site map
-- [GitHub README (CN)](https://github.com/oliver2023777/Whaint/blob/main/README.md): Public product fact sheet
+- [GitHub README (CN)](https://github.com/oliver2023777/Whaint/blob/main/README.md): Public product fact sheet (30s summary, principles, AI FAQ)
 - [GitHub README (EN)](https://github.com/oliver2023777/Whaint/blob/main/README.en.md): English product fact sheet
 `;
 }

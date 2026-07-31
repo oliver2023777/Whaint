@@ -148,6 +148,7 @@ cd Whaint
 
 | 主题 | 路径 |
 |------|------|
+| **系统交互说明（审查稿）** | [`系统交互说明.md`](系统交互说明.md) |
 | 对外产品介绍（公开 · 中） | [`README.md`](../README.md) |
 | 对外产品介绍（公开 · 英） | [`README.en.md`](../README.en.md) |
 | 合规真源 | [`compliance/`](../compliance/README.md) |

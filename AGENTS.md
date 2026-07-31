@@ -3,7 +3,8 @@
 新对话请先阅读：
 
 1. [`README.md`](README.md) / [`README.en.md`](README.en.md) — **对外产品定位**（中/英；受众 / CTA / 功能详解 / 界面示意）  
-2. [`docs/WORKSPACE.md`](docs/WORKSPACE.md) — **工作区流程**（三仓、同步、部署、GEO 实现）
+2. [`docs/WORKSPACE.md`](docs/WORKSPACE.md) — **工作区流程**（三仓、同步、部署、GEO 实现）  
+3. 给人审查整套交互时，用 [`docs/系统交互说明.md`](docs/系统交互说明.md)（非官网挂载文案）
 
 硬约束：
 
