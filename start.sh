@@ -4,11 +4,12 @@
 #
 #   ./start.sh                 # 构建并启动 → http://IP:3080
 #   ./start.sh start           # 仅启动（不重建）
-#   ./start.sh start --build   # 强制重建并启动（会按 .env 同步 Whapub changelog）
+#   ./start.sh start --build   # 强制重建并启动（同步 Whapub changelog，可选 commit/push 进本仓）
 #   ./start.sh stop|restart|logs|status|help
 #
 # 无 .env 时会从 .env.example 自动生成；端口固定 3080（见 docker-compose.yml）
 # Whapub 为私有仓时，.env 必须填写 WHAPUB_TOKEN，否则 --build 同步会失败
+# 同步后默认将 content/changelog/ commit + push 到 Whaint（GEO）；需 WHAINT_TOKEN 或可推送的 SSH
 # ═══════════════════════════════════════════════════════════════
 
 set -euo pipefail
@@ -96,6 +97,21 @@ prep_changelog_build() {
       err "宿主机同步失败。请检查 WHAPUB_TOKEN 与网络后重试。"
       exit 1
     fi
+    # 有变更则写入本仓并推送，公开 GitHub 也有文给 GEO（失败只警告，不挡构建）
+    export SYNC_CHANGELOG_COMMIT="$(env_get SYNC_CHANGELOG_COMMIT)"
+    export SYNC_CHANGELOG_PUSH="$(env_get SYNC_CHANGELOG_PUSH)"
+    export WHAINT_TOKEN="$(env_get WHAINT_TOKEN)"
+    export GITHUB_TOKEN="$(env_get GITHUB_TOKEN)"
+    [[ -z "${SYNC_CHANGELOG_COMMIT:-}" ]] && unset SYNC_CHANGELOG_COMMIT
+    [[ -z "${SYNC_CHANGELOG_PUSH:-}" ]] && unset SYNC_CHANGELOG_PUSH
+    [[ -z "${WHAINT_TOKEN:-}" ]] && unset WHAINT_TOKEN
+    [[ -z "${GITHUB_TOKEN:-}" ]] && unset GITHUB_TOKEN
+    # 未单独配 WHAINT_TOKEN 时，沿用 WHAPUB_TOKEN（需对 Whaint 有写权限）
+    if [[ -z "${WHAINT_TOKEN:-}" && -z "${GITHUB_TOKEN:-}" && -n "${WHAPUB_TOKEN:-}" ]]; then
+      export WHAINT_TOKEN="$WHAPUB_TOKEN"
+    fi
+    info "尝试将 changelog 提交并推送到 Whaint 远程…"
+    sh "$ROOT/scripts/commit-changelog.sh" || warn "changelog commit/push 脚本异常（已忽略，继续构建）"
   fi
 }
 

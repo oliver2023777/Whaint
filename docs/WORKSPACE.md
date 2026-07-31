@@ -74,18 +74,22 @@ content/
 
 1. WhalePub「官方发布」→ `marketing/changelog/{kind}/` → `git push`  
 2. Whaint 服务器：`git pull` → `./start.sh start --build`  
-3. 构建前 `scripts/sync-changelog.sh` sparse 拉取 Whapub `marketing/changelog/`
+3. 构建前 `scripts/sync-changelog.sh` sparse 拉取 Whapub `marketing/changelog/`  
+4. 若目录有变更：`scripts/commit-changelog.sh` 只提交 `content/changelog/` 并 **push 回 Whaint**（公开仓 / GEO）
 
 环境变量（`.env` / `.env.example`）：
 
 | 变量 | 说明 |
 |------|------|
-| `WHAPUB_TOKEN` | 私有仓必填，可读 Whapub 的 GitHub PAT |
+| `WHAPUB_TOKEN` | 私有仓必填，可读 Whapub；若兼写 Whaint 可复用为推送凭证 |
 | `WHAPUB_REPO` | 默认 `https://github.com/oliver2023777/Whapub.git` |
 | `WHAPUB_REF` | 默认 `main` |
 | `SYNC_CHANGELOG` | 默认 `1`；`0` 关闭同步 |
+| `SYNC_CHANGELOG_COMMIT` | 默认 `1`；同步后是否 commit 进本仓 |
+| `SYNC_CHANGELOG_PUSH` | 默认 `1`；commit 后是否 push |
+| `WHAINT_TOKEN` | 可选；专用于 push Whaint（否则用 `GITHUB_TOKEN` / `WHAPUB_TOKEN` / SSH） |
 
-本地：`bun run sync:changelog`。`content/changelog/` 是同步结果，勿当长期手改真源。`git pull` 若被未跟踪同步文件挡住，可先删冲突 `.md` 再拉。
+本地：`bun run sync:changelog`。真源仍在 Whapub；本仓 `content/changelog/` 是镜像（现会进 Git 供 GEO）。推送失败只警告，不挡 Docker 构建。
 
 ---
 
