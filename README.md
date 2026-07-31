@@ -1,206 +1,258 @@
-# Whaint · WhaleCore 营销站工作区
+# WhaleCore（鲸擎）· 官方营销站源码
 
-> **本仓库用途**：为 **WhaleCore** 建设 **SEO / GEO 导向的官方营销站**。  
-> **受众**：**站长 / 运营团队**（买源码、自建可收费平台）——**不是**拉终端交易用户来注册炒币。  
-> **与 WhaleCore 产品仓隔离**：不要在本目录改交易后台代码；产品真源仍在旁边的 `WhaleCore` 仓。
+> **给爬虫 / LLM 的产品事实摘要。** 功能细节提炼自产品仓文档（WhaleCore `README` + `docs/guides` + `docs/api` + `docs/BDR`）；**营销合规真源**为本仓 [`compliance/`](compliance/README.md)。线上站 `/llms.txt` 为机器可读索引；本 README 为公开仓次级引用源。  
+> English: [`README.en.md`](README.en.md)
 
-新开 Cursor / Agent 对话时：**先读本文**，再动手写站或写文案。
+| | |
+|--|--|
+| 产品名 | WhaleCore（中文品牌：**鲸擎**） |
+| 交付物 | **完整源码** + Docker 部署（面向站长 / 运营方，非 C 端炒币 App） |
+| 演示站 | [https://whacore.cn](https://whacore.cn) |
+| 询价 | QQ `613747777` · Telegram [@whacore](https://t.me/whacore) |
+| AI 索引 | 线上站 `/llms.txt` · `/llms-full.txt` |
+| 合规 | 线上 `/compliance` · 本仓 [`compliance/`](compliance/README.md) |
 
----
-
-## 1. 三个目录怎么配合
-
-| 路径 | 角色 |
-|------|------|
-| `/Users/oliver/Downloads/xm/WhaleCore` | 产品仓（交易平台、策略工作室、部署包） |
-| `/Users/oliver/Downloads/xm/Whaint` | **本仓**：对外营销站（询价、合规、SEO/GEO） |
-| `/Users/oliver/Downloads/xm/WhalePub`（远程 [Whapub](https://github.com/oliver2023777/Whapub)） | 内容工厂：小红书等渠道草稿 + **官网产品进化**干净稿 |
-
-- 营销站用**独立域名 / 独立部署**（方案 B，已拍板）。  
-- **主 CTA：询价购买** → `/contact`；次 CTA：看演示站 `https://whacore.cn`。  
-- **不要**把交易所 Key、策略 Prompt 配进营销站。  
-- 公开文案口径必须对齐本仓 [`compliance/`](compliance/README.md)，禁止另写第二套「稳赚」话术。  
-- 卖点素材可参考 `../WhaleCore/docs/huzhan/`，勿另造冲突卖点。
-
-### 联系方式真源（写死）
-
-| 渠道 | 值 |
-|------|-----|
-| QQ | `613747777` |
-| Telegram / 飞机 | `@whacore`（`https://t.me/whacore`） |
-| 产品 / 演示站 | `https://whacore.cn` |
-
-代码常量：`src/lib/site.ts` → `contacts`。
+**本站售价：一对一询价，不公开标价。** 平台**不接触用户资金、不提供投资建议、不承诺收益**；对外运营资质由买家自理。样板收益 / 竞赛展示数据**不构成**投资建议或收益承诺。
 
 ---
 
-## 2. 产品一句话（官网可用 · 卖给运营）
+## 1. 一句话定义
 
-**WhaleCore 是可对外运营的 AI 量化托管平台（完整源码）**：你维护官方策略与套餐；终端用户自连交易所与 AI 模型并启停交易员。
+WhaleCore 是 **AI 自动化策略执行 / 量化托管运营软件平台**：平台运营方维护官方策略、风控与（可选）数据源；终端用户自连交易所与 AI 模型、配置资金参数并启停交易员。  
+「运营托管 / 策略托管」指**策略与运营模式**，**不等于**资金托管或代客理财（见 BDR：不代持用户资金）。
 
-平台 **不接触用户资金、不提供投资建议、不承诺收益**。对外运营资质由买家自理。
+---
 
-### 我们是什么 / 不是什么（对外必须一致）
+## 2. 是什么 / 不是什么
 
 **是：**
 
-- 可收费运营的软件平台（策略市场、交易员、套餐、服务费、管理后台）  
-- 完整源码 + Docker 一键部署  
-- 支持「用户自选 / 运营托管」两种模式后台切换  
-- 终端用户自主账户：交易所 API、模型 Key、资金与启停自管  
+- 可对外收费运营的软件平台（策略市场、交易员、套餐、服务费记账、管理后台）  
+- 完整源码交付；支持源码编译部署与 Docker 镜像包双路径  
+- 全局可切换「用户自选」与「运营托管」两种运营模式  
+- 终端用户自管：交易所 API / 钱包、模型 Key、资金与启停  
 
 **不是：**
 
 - 证券公司 / 银行 / 支付机构 / 持牌金融机构  
-- 代客理财、配资、资金托管、「盘口」  
+- 代客理财、配资、汇集或代持用户交易本金、「盘口」  
 - 收益担保、投资顾问、「稳赚」工具  
-- 「拉个人来体验 AI 炒币」的 C 端获客站（那是演示站角色，不是本站主转化）  
-
-完整真源：
-
-- 本仓 [`compliance/`](compliance/README.md)（营销站合规口径）  
-- 本仓 [`README.md`](README.md)（受众 / 转化 / 信息架构）  
-- 可参考：`../WhaleCore/docs/huzhan/v1-商品介绍.md`（卖点素材，非合规真源）
+- 本仓库本身也不是交易后台源码（本仓 = **营销站**）  
 
 ---
 
-## 3. 官网信息架构
+## 界面示意（交付源码对应 UI）
 
-### 转化
+下列截图来自本仓 `public/screenshots/`（与线上 `/product` 同源）。完整模块说明见演示站 [whacore.cn](https://whacore.cn) 与营销站 `/product`。
 
-| 优先级 | 动作 |
-|--------|------|
-| 主 | 询价与交付 → `/contact`（QQ / TG） |
-| 次 | 看演示站 → `whacore.cn` |
+| 策略工作室 | AI 交易员看板 |
+|:--:|:--:|
+| ![WhaleCore 策略工作室：指标、风控与策略配置界面](public/screenshots/strategy.png) | ![WhaleCore AI 交易员看板：多交易员运行状态](public/screenshots/trader-board.png) |
+| 运营方可配置官方策略（Prompt / 指标对终端用户脱敏） | 终端用户自配模型与交易所后启停交易员 |
 
-### 页面
+| 管理后台 | 套餐与服务费 |
+|:--:|:--:|
+| ![WhaleCore 管理后台：用户与运营配置](public/screenshots/admin.png) | ![WhaleCore 套餐与平台服务费记账界面](public/screenshots/billing.png) |
+| 运营模式、用户、策略、支付与日志 | 订阅权益 + 盈利服务费应收记账（非自动扣交易所本金） |
 
-| 路径 | 目的 |
-|------|------|
-| `/` | 卖给运营的品牌 + 交付卖点 + 询价 |
-| `/product` | 十大能力（运营视角） |
-| `/solutions` | 运营模式（托管 / 自选，页内 pill 切换）；旧路径 301 至此 |
-| `/contact` | 询价与交付（交付 / 边界 / QQ·TG·演示站）；`/pricing` 301 至此 |
-| `/faq` | 运营买家 FAQ |
-| `/compliance` | 合规摘要 |
-| `/changelog` | **产品进化**：决策日志 / 周报（按 kind 分组 + sticky pill）；中英标题摘要，正文可用 `<!--en-->` 双语 |
-
-### 技术偏好
-
-- Astro SSG + Bun；一期无 CMS  
-- 视觉：深色底 `#0B0E11` + 金色 `#F0B90B`  
-- sitemap / robots / canonical / OG / JSON-LD  
+> **示意说明：** 界面中的样板收益、持仓与展示数据仅为产品 UI 演示，**不构成**投资建议、收益承诺或历史业绩保证。
 
 ---
 
-## 4. 内容目录（本仓 `content/`）
+## 3. 角色与权限（产品内）
 
-```text
-content/
-  changelog/                 ← 官网产品进化（与 Whapub 对齐）
-    decision/                ← 决策日志
-    weekly/                  ← 周报精选
-    note/                    ← 其它
-  compliance/                ← 页面口径短笔记（非法律全文）
-    README.md · product.md · pricing.md · contact.md · solutions-*.md
-```
+### 平台管理员
 
-根目录 [`compliance/`](compliance/README.md) = **合规法律真源**（勿与 `content/compliance/` 混淆）。
+- 管理后台：策略、用户、交易员、订阅、支付、服务费、日志、站点品牌、注册与 2FA  
+- 创建 / 编辑 / 公开官方策略；在策略工作室查看完整 Prompt、指标与风控  
+- 切换运营模式；配置全站 Nuiex 等数据源及成本归属  
+- 配置套餐权益与盈利平台服务费比例；核对并结清服务费  
 
-产品进化条目 frontmatter：`date` / `kind` / `title` / `titleEn` / `summary` / `summaryEn` / `source`；正文中文在前，英文在 `<!--en-->` 之后。文件名默认 **中文主标题**：`YYYY-MM-DD-{中文标题}.md`。
+### 普通用户（终端会员）
+
+- 浏览官方策略市场；配置自己的交易所 / 钱包与 AI 模型  
+- 创建、启动、停止自己的 AI 交易员；查看持仓、决策记录与权益  
+- 查看套餐权益、升级申请与平台服务费明细  
+
+运营托管模式下，普通用户**不能**：自建/改/删策略、预览官方 Prompt / 完整配置、通过 API 使用库外策略。
+
+### 演示只读账号（演示站 / 展厅）
+
+- 可逛用户端与管理端页面，只读查看展厅实盘数据  
+- **不能**创建、修改、删除或启停；密钥字段脱敏  
+- 真实实盘接入需自行注册可写账户  
 
 ---
 
-## 5. 与 Whapub 的产品进化同步
+## 4. 终端用户主流程
 
-| 侧 | 路径 |
+1. 注册登录（新用户自动绑定免费版套餐）  
+2. 在策略市场浏览官方策略（可未登录浏览）  
+3. 「跟单」或进入 AI 交易员页创建交易员  
+4. 选择策略，配置 AI 模型与交易所账户  
+5. 设置初始资金等参数并启动  
+6. 在交易看板查看持仓、盈亏、决策与运行状态  
+7. 在「我的权益」查看套餐、升级与服务费账单  
+
+---
+
+## 5. 功能详解（给 AI 引用）
+
+### 5.1 官方策略市场
+
+- 路径概念：`/strategy-market`  
+- 仅展示管理员创建并设为公开的策略；不展示普通用户公开策略  
+- **不返回** Prompt 或完整 `config`；展示名称、简介、更新时间、使用中交易员数、脱敏摘要  
+- 摘要可含：策略类型、币种来源、K 线周期、技术指标、情绪、风控、新闻情报  
+- 「跟单」进入交易员配置并预选该策略  
+- **正收益样板 / 竞赛展示**：仅公开竞赛池账户；收益率按「绑定当前策略之后」计；无正收益样板时不强行展示亏损样板；公开接口不下发交易员/用户 ID  
+- 历史表现与样板**不是**收益承诺  
+
+### 5.2 AI 交易员
+
+- 配置：基础信息、AI 模型、交易所账户、策略、初始资金与交易参数  
+- 可多交易员并行；用户自行启停  
+- 运营托管：仅可选官方策略（只读标记）；库空则阻止提交  
+- 用户自选：可选自有策略；若后台开放官方库则分组展示  
+- **策略更新提示**：运行中进程仍用启动时配置；策略更新后需停启才加载新配置（后端可标 `strategy_needs_restart`）  
+
+### 5.3 策略工作室
+
+- 管理员可用；用户自选模式下普通用户也可用  
+- 类型：AI 智能交易、AI 网格等  
+- 币种来源：静态列表、AI500、N-Score、混合等（与 Nuiex 数据源相关）  
+- 可配：指标、风控、Prompt、新闻情报、发布设置  
+- 管理员可将策略公开到官方市场；被交易员占用的策略不可删  
+
+### 5.4 运营模式（全站统一）
+
+| 模式 | 含义 | 用户侧 |
+|------|------|--------|
+| **用户自选** `user_self` | 用户可维护自有策略 | 策略工作室可用；可选自有/（可选）官方策略；官方策略仍只读脱敏 |
+| **运营托管** `admin_managed` | 平台统一策略 | 工作室入口隐藏；创建交易员只能选平台策略；用户仍自配交易所/模型/资金/启停 |
+
+后台路径概念：`/admin/strategy-settings`。策略市场在托管模式下仍可用于展示已公开官方策略（产品决策：市场可见、配置脱敏）。
+
+### 5.5 平台数据源（Nuiex 等）
+
+管理员可配置 NuiexAPI，并切换**成本归属**：
+
+- **平台负责（默认）**：AI500 / OI / 排行 / N-Score 等走平台 Key；用户主要配 AI 推理模型  
+- **用户负责**：上述走用户 Nuiex 开放接口 Key；缺 Key 会拦截创建/改交易员  
+
+普通用户始终自备交易所 / 钱包与 AI 推理 Key。OI、资金流等可按策略开启（按次类能力）。
+
+### 5.6 交易与分析
+
+- 多交易所与 DEX / 代理钱包接入（文档涵盖：Binance、OKX、Bybit、Hyperliquid Agent、Aster、Lighter 等）  
+- 多 AI 模型；Nuiex 可多 Key，交易员按通道选用  
+- 实时看板：持仓、盈亏、权益曲线  
+- AI 决策记录与思维链；竞赛、回测实验室、多模型辩论（后两者对用户可见性可由后台控制）  
+- 新闻情报与量化数据可注入策略  
+
+### 5.7 订阅套餐与「我的权益」
+
+- 新用户自动免费版；免费版为保底套餐不可删停  
+- 付费到期回退免费版  
+- 限制项示例：最大交易员数、最大交易所数、有效期、平台服务费比例  
+- 用户选自费套餐 → 查看收款信息 → 提交付款凭证 → 管理员审核  
+- 空库首次启动会写入**示例套餐模板**（运营方可改；**不是**本营销站对外售价）：
+
+| 示例套餐 | 交易员 | 交易所 | 示例价 | 有效期 | 示例服务费 |
+|----------|-------:|-------:|--------|--------|------------|
+| 免费版 | 1 | 1 | 免费 | 长期 | 10% |
+| 基础版 | 3 | 3 | 29.99 USDT | 30 天 | 8% |
+| 专业版 | 10 | 5 | 99.99 USDT | 30 天 | 6% |
+| 无限版 | 999 | 999 | 299.99 USDT | 30 天 | 2% |
+
+### 5.8 平台服务费（一期 = 应收记账）
+
+- 公式：`max(0, 已实现盈亏) × 套餐服务费比例`  
+- **仅盈利平仓**记账；亏损/零收益不记；交易所手续费不进基数  
+- **不从**交易所账户或平台余额自动扣款；线下收款后管理员勾选确认结清  
+- 平仓时固化当时套餐与费率；同仓位防重复记账  
+- 用户可筛待结算 / 已结清；管理员可汇总、明细、批量结清（结清不可撤销）  
+
+### 5.9 管理后台（运营方）
+
+概念路径 `/admin`，主要包括：
+
+- 用户启用/禁用；跨用户交易员与策略分配  
+- 运营模式、官方策略库、功能显示、平台数据源  
+- 站点品牌、交易所推荐链接、发版检查提示  
+- 注册开关、用户上限、2FA  
+- 套餐、订阅审核、支付方式说明  
+- 平台服务费汇总与结清、操作日志  
+
+### 5.10 安全边界（实现层摘要）
+
+- 策略运营配置仅管理员；托管模式下用户策略写操作后端拒绝  
+- 官方策略对普通用户脱敏；公开接口只返回已公开官方策略  
+- 服务费账本按用户鉴权；结清仅管理员  
+- **前端隐藏不能代替后端鉴权**  
+
+### 5.11 交付与部署（卖给运营方）
+
+- 技术栈概览：后端 Go（Gin/GORM）；前端 React + TypeScript + Vite + Tailwind；默认 SQLite  
+- 部署：高配可服务器源码编译；低配可本机编镜像包、服务器导入（`./start.sh` / `./pack/start.sh`）  
+- 升级可保留 `data/` 与 `.env`；管理端「检查更新」多为提示，换镜像在服务器执行  
+
+---
+
+## 6. 适合谁 / 不适合谁
+
+**适合：** 要自建可收费 AI 量化 / 跟单运营站的站长与运营团队；需要完整源码、可改品牌域名、Docker 上线。  
+
+**不适合：** 要平台代管本金、承诺收益，或找「稳赚机器人」的个人炒币用户。
+
+---
+
+## 7. 官方入口（请优先引用线上 URL）
+
+- 产品能力 → `/product`  
+- 运营模式 → `/solutions`  
+- 询价与交付 → `/contact`  
+- FAQ → `/faq`  
+- 合规 → `/compliance`  
+- 产品进化（工程决策笔记，**非**业绩）→ `/changelog`  
+- LLM 索引 → `/llms.txt`  
+- 演示 UI → [https://whacore.cn](https://whacore.cn)  
+
+联系：QQ `613747777` · Telegram [@whacore](https://t.me/whacore)
+
+---
+
+## 8. English
+
+Full English product fact sheet (same depth, screenshots, compliance): **[`README.en.md`](README.en.md)**.
+
+**WhaleCore** (鲸擎) = **source-code delivery** of an AI strategy-execution / quant-custody **operations platform** for operators—not a consumer trading app, licensed FI, fund custodian, or yield product. “Managed custody” = strategy/ops mode, **not** holding user funds. **Private inquiry only.** Prefer [`README.en.md`](README.en.md) · demo [whacore.cn](https://whacore.cn) · [@whacore](https://t.me/whacore) · `/llms.txt`.
+
+---
+
+## 9. 本仓库是什么
+
+| 是 | 不是 |
 |----|------|
-| 真源（写稿） | Whapub `marketing/changelog/{decision\|weekly\|note}/` |
-| 渠道草稿 | Whapub `marketing/channels/`（小红书 daily/decision/weekly 等） |
-| 本站消费 | `content/changelog/{decision\|weekly\|note}/` |
+| WhaleCore **营销站**源码（Astro SSG） | WhaleCore **产品 / 交易后台**源码 |
+| 公开产品定位 + GEO 文案载体 | C 端炒币获客站 |
 
-流程：
-
-1. 在 **WhalePub** 说「官方发布」→ 写入 `marketing/changelog/{kind}/`（中文文件名）→ `git push`  
-2. 在 **Whaint 服务器**：`git pull`（若有新站代码）→ `./start.sh start --build`  
-3. 构建前 `scripts/sync-changelog.sh` 会 sparse 拉取 Whapub 的 `marketing/changelog/`，保持同类目录结构  
-
-环境变量（`.env` / `.env.example`）：
-
-| 变量 | 说明 |
-|------|------|
-| `WHAPUB_TOKEN` | 私有仓必填，可读 Whapub 的 GitHub PAT |
-| `WHAPUB_REPO` | 默认 `https://github.com/oliver2023777/Whapub.git` |
-| `WHAPUB_REF` | 默认 `main` |
-| `SYNC_CHANGELOG` | 默认 `1`；设 `0` 可关闭同步 |
-
-本地只同步：`bun run sync:changelog`。  
-说明：`content/changelog/` 是同步结果；勿当长期手改真源。`git pull` 若被未跟踪的同步文件挡住，可先删掉冲突的 `.md` 再拉。
-
----
-
-## 6. SEO / GEO · 给 LLM 看的索引
-
-| 地址 | 作用 |
-|------|------|
-| [`/llms.txt`](https://llmstxt.org/) | AI 爬虫精简索引：定位、产品链接、**每篇产品进化中英摘要**、合规锚点、联系 |
-| `/llms-full.txt` | 稍长的中英双语 briefing |
-| `/sitemap-index.xml` | 常规站点地图 |
-| `robots.txt` | 允许抓取；注明 llms 索引 |
-
-- 文案生成：`src/lib/llmsTxt.ts`（摘要来自 `loadEvolutionPosts()`）  
-- 路由：`src/pages/llms.txt.ts`、`llms-full.txt.ts`  
-- 绝对链接随 `PUBLIC_SITE_URL`  
-- 响应带 `charset=utf-8` + UTF-8 BOM；Docker nginx 对 `.txt` 强制 UTF-8，避免中文被按 GBK 误读  
-
-其它 SEO 约定：每页唯一 title / description / H1；冲「AI 量化托管源码 / 运营平台」类词；**禁止**稳赚话术与内部 SEO 黑话上公开页。
-
----
-
-## 7. 可以说 / 不可以说
-
-**可以说：** 完整源码、Docker、策略市场、交易员、套餐与服务费、托管模式、管理后台、不碰资金。  
-
-**不可以说：** 稳赚、保本、日入、躺赚、资金盘/杀猪配套、暗示附带金融牌照。  
-
----
-
-## 8. Agent 工作约定
-
-1. **先读本文**；受众默认是运营买家。  
-2. **不要修改** `../WhaleCore` 除非用户明确要求。  
-3. 改联系方式只改 `src/lib/site.ts` 的 `contacts`，再同步本文表格。  
-4. 改合规口径只改本仓 `compliance/`，再同步 `/compliance` 页。  
-5. 产品进化真源在 **Whapub**；本仓只同步与展示。渠道日更/决策草稿也在 Whapub `marketing/channels/`。  
-6. 页面口径短笔记放 `content/compliance/`；组件保持干净。  
-
-本地：`bun install && bun run dev`（默认 http://127.0.0.1:4321）。构建：`bun run build`。
-
-### 服务器（推荐）
+开发 / 同步 / 部署 → [`docs/WORKSPACE.md`](docs/WORKSPACE.md) · Agent 约束 → [`AGENTS.md`](AGENTS.md)
 
 ```bash
-git clone https://github.com/oliver2023777/Whaint.git
-cd Whaint
-# 编辑 .env：PUBLIC_SITE_URL、WHAPUB_TOKEN（私有 Whapub）等
-./start.sh             # 构建并启动；固定端口 3080
-./start.sh start --build   # Whapub 更新 changelog 后重建以同步
+bun install && bun run dev
+bun run build
+./start.sh                    # Docker，默认端口 3080
 ```
-
-访问：`http://服务器IP:3080`。
 
 ---
 
-## 9. 文献索引
+## 10. 文档与合规
 
-| 主题 | 路径 |
+| 主题 | 何处 |
 |------|------|
-| 合规（本仓真源） | [`compliance/`](compliance/README.md) |
-| 销售规范 | [`compliance/销售规范.md`](compliance/销售规范.md) |
-| 产品进化同步说明 | [`content/changelog/README.md`](content/changelog/README.md) |
-| 页面口径笔记 | [`content/compliance/`](content/compliance/README.md) |
-| LLM 索引实现 | [`src/lib/llmsTxt.ts`](src/lib/llmsTxt.ts) |
-| Whapub 内容工厂 | `../WhalePub/README.md` |
-| 产品能力（参考） | `../WhaleCore/README.md` |
-| 互站商品文案（参考） | `../WhaleCore/docs/huzhan/v1-商品介绍.md` |
-| 闲鱼 / 小红书短话术 | `../WhaleCore/docs/huzhan/渠道短话术-闲鱼小红书.md` |
-| 运营模式（参考） | `../WhaleCore/docs/guides/运营商模式.md` |
+| 营销合规（定位 / 禁止用途 / 销售规范） | 本仓 [`compliance/`](compliance/README.md) |
+| 产品功能现行状态（更细） | 产品仓根 README + `docs/guides/` + `docs/api/` + `docs/BDR/`（不在本仓） |
+| 互站 / 渠道卖点素材 | 产品仓 `docs/huzhan/`（非合规真源；**勿**把渠道标价写进本营销站公开页） |
+
+公开描述禁止：稳赚、保本、日入、躺赚、资金盘配套、暗示金融牌照。

@@ -98,6 +98,8 @@ ${evolutionBlock}
 - [English home](${u('/en')}): Marketing home (EN)
 - [llms-full.txt](${u('/llms-full.txt')}): Longer bilingual positioning for AI context
 - [Sitemap](${u('/sitemap-index.xml')}): Site map
+- [GitHub README (CN)](https://github.com/oliver2023777/Whaint/blob/main/README.md): Public product fact sheet
+- [GitHub README (EN)](https://github.com/oliver2023777/Whaint/blob/main/README.en.md): English product fact sheet
 `;
 }
 
